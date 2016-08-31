@@ -176,7 +176,7 @@ func pow(a, b int) int {
 func finder(guess_l []byte, score_l, pool []int) []int {
 	newpool := make([]int, 6*6*6*6)
 	var colors []byte = []byte{'R', 'W', 'Y', 'G', 'u', 'k'}
-
+	var c0, c1, c2, c3 byte
 	var b0 [1][]int = [1][]int{[]int{1, 2, 3, 4}}
 	var b1 [4][]int = [4][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
 	//	var b2 [6][]int = [6][]int{[]int{1, 2}, []int{1, 3}, []int{1, 4}, []int{2, 3}, []int{2, 4}, []int{3, 4}}
@@ -256,6 +256,639 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 						}
 					}
 				}
+			} else if score_l[1] == 2 {
+				// w=2
+				// 01, 02, 03, 12, 13, 23
+
+				// (0, 1) fixed, (2, 3) change
+				c0 = guess_l[0]
+				c1 = guess_l[1]
+				for _, c2 := range colors {
+					for _, c3 := range colors {
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 2) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 2) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 1) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 1) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+					}
+				}
+
+				// 01, 02, 03, 12, 13, 23
+				// (0, 2) fixed, (1, 3) change
+				c0 = guess_l[0]
+				c2 = guess_l[2]
+				for _, c1 := range colors {
+					for _, c3 := range colors {
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 2) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 2) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 1) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 1) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+					}
+				}
+
+				// 01, 02, 03, 12, 13, 23
+				// (0, 3) fixed, (1, 2) change
+				c0 = guess_l[0]
+				c3 = guess_l[3]
+				for _, c1 := range colors {
+					for _, c2 := range colors {
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 2) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 2) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 1) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 1) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+					}
+				}
+
+				// 01, 02, 03, 12, 13, 23
+				// (1, 2) fixed, (0, 3) change
+				c1 = guess_l[1]
+				c2 = guess_l[2]
+				for _, c0 := range colors {
+					for _, c3 := range colors {
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 2) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 2) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 1) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 1) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+					}
+				}
+
+				// 01, 02, 03, 12, 13, 23
+				// (1, 3) fixed, (0, 2) change
+				c1 = guess_l[1]
+				c3 = guess_l[3]
+				for _, c0 := range colors {
+					for _, c2 := range colors {
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 2) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 2) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 1) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 1) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+					}
+				}
+
+				// 01, 02, 03, 12, 13, 23
+				// (2, 3) fixed, (0, 1) change
+				c2 = guess_l[2]
+				c3 = guess_l[3]
+				for _, c0 := range colors {
+					for _, c1 := range colors {
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 2) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 0) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 2) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 1) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 3) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 2) * ctoi(c0)
+						index += pow(6, 3) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 1) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 0) * ctoi(c1)
+						index += pow(6, 1) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 1) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 2) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+						index = pow(6, 3) * ctoi(c0)
+						index += pow(6, 2) * ctoi(c1)
+						index += pow(6, 0) * ctoi(c2)
+						index += pow(6, 1) * ctoi(c3)
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+
+					}
+				}
+
 			}
 
 		}
