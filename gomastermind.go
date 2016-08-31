@@ -3,31 +3,19 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
+
 	"os"
 	"strings"
 )
 
 const (
-	R      byte         = 'R'
-	W      byte         = 'W'
-	Y      byte         = 'Y'
-	G      byte         = 'G'
-	B      byte         = 'B'
-	u      byte         = 'u'
-	k      byte         = 'k'
-	colors []byte       = []byte{R, W, Y, G, u, k}
-	ctoi   map[byte]int = map[byte]int{
-		R: 0,
-		W: 1,
-		Y: 2,
-		G: 3,
-		u: 4,
-		k: 5,
-	}
-	b1 [4][]int = [4][]int{[3]int{2, 3, 4}, [3]int{1, 3, 4}, [3]int{1, 2, 4}, [3]int{1, 2, 3}}
-	b2 [6][]int = [6][]int{[2]int{1, 2}, [2]int{1, 3}, [2]int{1, 4}, [2]int{2, 3}, [2]int{2, 4}, [2]int{3, 4}}
-	b3 [4][]int = [4][]int{[1]int{1}, [1]int{2}, [1]int{3}, [1]int{4}}
+	R byte = 'R'
+	W byte = 'W'
+	Y byte = 'Y'
+	G byte = 'G'
+	B byte = 'B'
+	u byte = 'u'
+	k byte = 'k'
 )
 
 func hash(guess []byte) int {
@@ -58,7 +46,7 @@ func splitScore(score string) []int {
 		switch score[i] {
 		case 'x':
 			a[0] += 1
-		default:
+		case 'o':
 			a[1] += 1
 		}
 	}
@@ -101,8 +89,7 @@ func main() {
 	var guess_l []byte
 	var score_l []int
 
-	var pool [6 * 6 * 6 * 6]int
-
+	pool := make([]int, 6*6*6*6)
 	for {
 		guesscount += 1
 		fmt.Printf("Guess %d\n", guesscount)
@@ -124,19 +111,50 @@ func main() {
 		score_l = splitScore(score)
 		fmt.Println(score_l)
 
+		a := finder(guess_l, score_l, pool)
+		fmt.Println(a)
+
+	}
+}
+
+func pow(a, b int) int {
+	if b == 0 {
+		return 1
+	} else if b == 1 {
+		return a
+	} else if b%2 == 0 {
+		return pow(a, b/2) * pow(a, b/2)
+	} else {
+		return pow(a, b/2) * pow(a, b/2) * a
 	}
 }
 
 func finder(guess_l []byte, score_l, pool []int) []int {
+	var colors [6]byte = [6]byte{'R', 'W', 'Y', 'G', 'u', 'k'}
+	var ctoi map[byte]int = map[byte]int{
+		R: 0,
+		W: 1,
+		Y: 2,
+		G: 3,
+		u: 4,
+		k: 5,
+	}
+	var b1 [4][]int = [4][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
+	//	var b2 [6][]int = [6][]int{[]int{1, 2}, []int{1, 3}, []int{1, 4}, []int{2, 3}, []int{2, 4}, []int{3, 4}}
+	//	var b3 [4][]int = [4][]int{[]int{1}, []int{2}, []int{3}, []int{4}}
 	var index int
 	if score_l[0] == 1 {
+		// b=1
 		for ib, e := range b1 {
 			if score_l[0] == 0 {
 				// w=0
-				for _, c1 := range colors {
-					for _, c2 := range colors {
-						for _, c3 := range colors {
-							index = math.Pow(6, ib)*ctoi[guess_l[ib]] + math.Pow(6, e[0])*ctoi[c1] + math.Pow(6, e[1])*ctoi[c2] + math.Pow(6, e[2])*ctoi[c3]
+				for _, c1 := range colors { // 1st
+					for _, c2 := range colors { // 2nd
+						for _, c3 := range colors { // 3rd
+							index = pow(6, ib) * ctoi[guess_l[ib]]
+							index += pow(6, e[0]) * ctoi[c1]
+							index += pow(6, e[1]) * ctoi[c2]
+							index += pow(6, e[2]) * ctoi[c3]
 							pool[index] += 1
 						}
 					}
@@ -144,11 +162,17 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 
 			} else if score_l[1] == 1 {
 				// w=1
-
 				c1 := guess_l[e[0]]
 				for _, c2 := range colors {
 					for _, c3 := range colors {
-						index = math.Pow(6, ib)*ctoi[guess_l[ib]] + math.Pow(6, e[0])*ctoi[c1] + math.Pow(6, e[1])*ctoi[c2] + math.Pow(6, e[2])*ctoi[c3]
+
+						index = pow(6, ib) * ctoi[guess_l[ib]]
+						index += pow(6, e[0]) * ctoi[c1]
+						index += pow(6, e[1]) * ctoi[c2]
+						index += pow(6, e[2]) * ctoi[c3]
+						fmt.Println(index)
+						fmt.Println(e)
+						fmt.Println(ctoi[guess_l[ib]], ctoi[c1], ctoi[c2], ctoi[c3])
 						pool[index] += 1
 					}
 				}
@@ -156,7 +180,10 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 				c2 := guess_l[e[1]]
 				for _, c1 := range colors {
 					for _, c3 := range colors {
-						index = math.Pow(6, ib)*ctoi[guess_l[ib]] + math.Pow(6, e[0])*ctoi[c1] + math.Pow(6, e[1])*ctoi[c2] + math.Pow(6, e[2])*ctoi[c3]
+						index = pow(6, ib) * ctoi[guess_l[ib]]
+						index += pow(6, e[0]) * ctoi[c1]
+						index += pow(6, e[1]) * ctoi[c2]
+						index += pow(6, e[2]) * ctoi[c3]
 						pool[index] += 1
 					}
 				}
@@ -164,7 +191,10 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 				c3 := guess_l[e[2]]
 				for _, c1 := range colors {
 					for _, c2 := range colors {
-						index = math.Pow(6, ib)*ctoi[guess_l[ib]] + math.Pow(6, e[0])*ctoi[c1] + math.Pow(6, e[1])*ctoi[c2] + math.Pow(6, e[2])*ctoi[c3]
+						index = pow(6, ib) * ctoi[guess_l[ib]]
+						index += pow(6, e[0]) * ctoi[c1]
+						index += pow(6, e[1]) * ctoi[c2]
+						index += pow(6, e[2]) * ctoi[c3]
 						pool[index] += 1
 					}
 				}
