@@ -175,31 +175,60 @@ func pow(a, b int) int {
 
 func finder(guess_l []byte, score_l, pool []int) []int {
 	newpool := make([]int, 6*6*6*6)
-	var colors [6]byte = [6]byte{'R', 'W', 'Y', 'G', 'u', 'k'}
-	var ctoi map[byte]int = map[byte]int{
-		R: 0,
-		W: 1,
-		Y: 2,
-		G: 3,
-		u: 4,
-		k: 5,
-	}
+	var colors []byte = []byte{'R', 'W', 'Y', 'G', 'u', 'k'}
+
+	var b0 [1][]int = [1][]int{[]int{1, 2, 3, 4}}
 	var b1 [4][]int = [4][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
 	//	var b2 [6][]int = [6][]int{[]int{1, 2}, []int{1, 3}, []int{1, 4}, []int{2, 3}, []int{2, 4}, []int{3, 4}}
 	//	var b3 [4][]int = [4][]int{[]int{1}, []int{2}, []int{3}, []int{4}}
 	var index int
-	if score_l[0] == 1 {
+	if score_l[0] == 0 {
+		// b=0
+		for _, e := range b0 {
+			if score_l[1] == 0 {
+				// w=0
+				_ = e
+				itobedeleted := make([]int, 6)
+				for i := 0; i < 4; i++ {
+					itobedeleted[ctoi(guess_l[i])] = 1
+				}
+				c := 0
+				for i := 0; i < 6; i++ {
+					if itobedeleted[i] == 1 {
+						colors = append(colors[:(i-c)], colors[(i+1-c):]...)
+						c += 1
+					}
+				}
+				for _, c0 := range colors {
+					for _, c1 := range colors {
+						for _, c2 := range colors {
+							for _, c3 := range colors {
+								index = pow(6, 0) * ctoi(c0)
+								index += pow(6, 1) * ctoi(c1)
+								index += pow(6, 2) * ctoi(c2)
+								index += pow(6, 3) * ctoi(c3)
+								if pool[index] != 0 {
+									newpool[index] = 1
+								}
+							}
+						}
+					}
+				}
+			}
+
+		}
+	} else if score_l[0] == 1 {
 		// b=1
 		for ib, e := range b1 {
 			if score_l[1] == 0 {
 				// w=0
-				for _, c1 := range colors { // 1st
-					for _, c2 := range colors { // 2nd
-						for _, c3 := range colors { // 3rd
-							index = pow(6, ib) * ctoi[guess_l[ib]]
-							index += pow(6, e[0]) * ctoi[c1]
-							index += pow(6, e[1]) * ctoi[c2]
-							index += pow(6, e[2]) * ctoi[c3]
+				for _, c0 := range colors { // 1st
+					for _, c1 := range colors { // 2nd
+						for _, c2 := range colors { // 3rd
+							index = pow(6, ib) * ctoi(guess_l[ib])
+							index += pow(6, e[0]) * ctoi(c0)
+							index += pow(6, e[1]) * ctoi(c1)
+							index += pow(6, e[2]) * ctoi(c2)
 							if pool[index] != 0 {
 								newpool[index] = 1
 							}
@@ -215,50 +244,50 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 					for _, c1 := range colors {
 						for _, c2 := range colors {
 
-							index = pow(6, ib) * ctoi[guess_l[ib]]
-							index += pow(6, e[0]) * ctoi[c0]
-							index += pow(6, e[1]) * ctoi[c1]
-							index += pow(6, e[2]) * ctoi[c2]
+							index = pow(6, ib) * ctoi(guess_l[ib])
+							index += pow(6, e[0]) * ctoi(c0)
+							index += pow(6, e[1]) * ctoi(c1)
+							index += pow(6, e[2]) * ctoi(c2)
 							if pool[index] != 0 {
 								newpool[index] = 1
 							}
 
-							index = pow(6, ib) * ctoi[guess_l[ib]]
-							index += pow(6, e[0]) * ctoi[c0]
-							index += pow(6, e[2]) * ctoi[c1]
-							index += pow(6, e[1]) * ctoi[c2]
+							index = pow(6, ib) * ctoi(guess_l[ib])
+							index += pow(6, e[0]) * ctoi(c0)
+							index += pow(6, e[2]) * ctoi(c1)
+							index += pow(6, e[1]) * ctoi(c2)
 							if pool[index] != 0 {
 								newpool[index] = 1
 							}
 
-							index = pow(6, ib) * ctoi[guess_l[ib]]
-							index += pow(6, e[1]) * ctoi[c0]
-							index += pow(6, e[0]) * ctoi[c1]
-							index += pow(6, e[2]) * ctoi[c2]
+							index = pow(6, ib) * ctoi(guess_l[ib])
+							index += pow(6, e[1]) * ctoi(c0)
+							index += pow(6, e[0]) * ctoi(c1)
+							index += pow(6, e[2]) * ctoi(c2)
 							if pool[index] != 0 {
 								newpool[index] = 1
 							}
 
-							index = pow(6, ib) * ctoi[guess_l[ib]]
-							index += pow(6, e[1]) * ctoi[c0]
-							index += pow(6, e[2]) * ctoi[c1]
-							index += pow(6, e[0]) * ctoi[c2]
+							index = pow(6, ib) * ctoi(guess_l[ib])
+							index += pow(6, e[1]) * ctoi(c0)
+							index += pow(6, e[2]) * ctoi(c1)
+							index += pow(6, e[0]) * ctoi(c2)
 							if pool[index] != 0 {
 								newpool[index] = 1
 							}
 
-							index = pow(6, ib) * ctoi[guess_l[ib]]
-							index += pow(6, e[2]) * ctoi[c0]
-							index += pow(6, e[0]) * ctoi[c1]
-							index += pow(6, e[1]) * ctoi[c2]
+							index = pow(6, ib) * ctoi(guess_l[ib])
+							index += pow(6, e[2]) * ctoi(c0)
+							index += pow(6, e[0]) * ctoi(c1)
+							index += pow(6, e[1]) * ctoi(c2)
 							if pool[index] != 0 {
 								newpool[index] = 1
 							}
 
-							index = pow(6, ib) * ctoi[guess_l[ib]]
-							index += pow(6, e[2]) * ctoi[c0]
-							index += pow(6, e[1]) * ctoi[c1]
-							index += pow(6, e[0]) * ctoi[c2]
+							index = pow(6, ib) * ctoi(guess_l[ib])
+							index += pow(6, e[2]) * ctoi(c0)
+							index += pow(6, e[1]) * ctoi(c1)
+							index += pow(6, e[0]) * ctoi(c2)
 							if pool[index] != 0 {
 								newpool[index] = 1
 							}
