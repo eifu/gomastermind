@@ -168,6 +168,17 @@ func pow(a, b int) int {
 	}
 }
 
+func elimColor(c byte, colors []byte) []byte {
+	j := 0
+	for i := 0; i < len(colors); i++ {
+		if colors[i] == c {
+			colors = append(colors[:(i-j)], colors[(i-j+1):]...)
+			j += 1
+		}
+	}
+	return colors
+}
+
 func finder(guess_l []byte, score_l, pool []int) []int {
 	newpool := make([]int, 6*6*6*6)
 	var colors []byte = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
@@ -175,7 +186,7 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 	var b0 [1][]int = [1][]int{[]int{1, 2, 3, 4}}
 	var b1 [4][]int = [4][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
 	//	var b2 [6][]int = [6][]int{[]int{1, 2}, []int{1, 3}, []int{1, 4}, []int{2, 3}, []int{2, 4}, []int{3, 4}}
-	//	var b3 [4][]int = [4][]int{[]int{1}, []int{2}, []int{3}, []int{4}}
+	//var b3 [4][]int = [4][]int{[]int{1}, []int{2}, []int{3}, []int{4}}
 	var index int
 	if score_l[0] == 0 {
 		// b=0
@@ -183,16 +194,8 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 			if score_l[1] == 0 {
 				// w=0
 				_ = e
-				itobedeleted := make([]int, 6)
 				for i := 0; i < 4; i++ {
-					itobedeleted[ctoi(guess_l[i])] = 1
-				}
-				c := 0
-				for i := 0; i < 6; i++ {
-					if itobedeleted[i] == 1 {
-						colors = append(colors[:(i-c)], colors[(i+1-c):]...)
-						c += 1
-					}
+					colors = elimColor(guess_l[i], colors)
 				}
 				for _, c0 := range colors {
 					for _, c1 := range colors {
