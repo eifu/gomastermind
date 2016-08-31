@@ -20,21 +20,16 @@ const (
 
 func hash(guess []byte) int {
 	acc := 0
+	var ctoi map[byte]int = map[byte]int{
+		R: 0,
+		W: 1,
+		Y: 2,
+		G: 3,
+		u: 4,
+		k: 5,
+	}
 	for _, g := range guess {
-		switch g {
-		case R:
-			acc += 0
-		case W:
-			acc += 1
-		case Y:
-			acc += 2
-		case G:
-			acc += 3
-		case u:
-			acc += 4
-		case k:
-			acc += 5
-		}
+		acc += ctoi[g]
 		acc *= 6
 	}
 	return acc
