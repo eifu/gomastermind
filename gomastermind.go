@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-
 	"os"
 	"strings"
 )
@@ -13,9 +12,8 @@ const (
 	W byte = 'W'
 	Y byte = 'Y'
 	G byte = 'G'
-	B byte = 'B'
-	u byte = 'u'
-	k byte = 'k'
+	U byte = 'U'
+	K byte = 'K'
 )
 
 func ctoi(c byte) int {
@@ -28,9 +26,9 @@ func ctoi(c byte) int {
 		return 2
 	case G:
 		return 3
-	case u:
+	case U:
 		return 4
-	case k:
+	case K:
 		return 5
 	}
 	return 0
@@ -48,9 +46,9 @@ func itoc(i int) byte {
 	case 3:
 		return G
 	case 4:
-		return u
+		return U
 	case 5:
-		return k
+		return K
 	}
 	return 0
 }
@@ -75,6 +73,14 @@ func dehash(num int) []byte {
 
 }
 
+func split(s string) []byte {
+	a := make([]byte, len(s))
+	for i := 0; i < len(s); i++ {
+		a[i] = s[i]
+	}
+	return a
+}
+
 func splitScore(score string) []int {
 	a := make([]int, 2)
 	for i := 0; i < len(score); i++ {
@@ -90,28 +96,17 @@ func splitScore(score string) []int {
 
 func splitGuess(guess string) []byte {
 	a := make([]byte, 0, len(guess))
-	fmt.Println(strings.Split(guess, ""))
+	fmt.Println(split(guess))
+
+	guess = strings.ToUpper(guess)
+	guessSplit := split(guess)
 	for i := 0; i < len(guess); i++ {
 		fmt.Println(a, i, len(guess))
-		switch guess[i] {
-		case R:
-			a = append(a, R)
-		case W:
-			a = append(a, W)
-		case Y:
-			a = append(a, Y)
-		case G:
-			a = append(a, G)
-		case B:
-			if guess[i+1] == u {
-				a = append(a, u)
-			} else {
-				a = append(a, k)
-			}
-			i += 1
-		default: // guess includes \n
-			return a
+
+		if guessSplit[i] == 'B' || guessSplit[i] == '\n' {
+			continue
 		}
+		a = append(a, byte(guessSplit[i]))
 	}
 	return a
 }
@@ -175,7 +170,7 @@ func pow(a, b int) int {
 
 func finder(guess_l []byte, score_l, pool []int) []int {
 	newpool := make([]int, 6*6*6*6)
-	var colors []byte = []byte{'R', 'W', 'Y', 'G', 'u', 'k'}
+	var colors []byte = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
 	var c0, c1, c2, c3 byte
 	var b0 [1][]int = [1][]int{[]int{1, 2, 3, 4}}
 	var b1 [4][]int = [4][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
@@ -216,6 +211,7 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 				}
 			} else if score_l[1] == 1 {
 				// w=1
+				// TODO: not in the right position.
 				for pos := 0; pos < 4; pos++ {
 					c0 := guess_l[pos]
 					for _, c1 := range colors {
@@ -258,6 +254,7 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 				}
 			} else if score_l[1] == 2 {
 				// w=2
+				// TODO: not in the right position.
 				// 01, 02, 03, 12, 13, 23
 
 				// (0, 1) fixed, (2, 3) change
