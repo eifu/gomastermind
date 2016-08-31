@@ -214,6 +214,48 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 						}
 					}
 				}
+			} else if score_l[1] == 1 {
+				// w=1
+				for pos := 0; pos < 4; pos++ {
+					c0 := guess_l[pos]
+					for _, c1 := range colors {
+						for _, c2 := range colors {
+							for _, c3 := range colors {
+								index = pow(6, 0) * ctoi(c0)
+								index += pow(6, 1) * ctoi(c1)
+								index += pow(6, 2) * ctoi(c2)
+								index += pow(6, 3) * ctoi(c3)
+								if pool[index] != 0 {
+									newpool[index] = 1
+								}
+
+								index = pow(6, 1) * ctoi(c0)
+								index += pow(6, 2) * ctoi(c1)
+								index += pow(6, 3) * ctoi(c2)
+								index += pow(6, 0) * ctoi(c3)
+								if pool[index] != 0 {
+									newpool[index] = 1
+								}
+
+								index = pow(6, 2) * ctoi(c0)
+								index += pow(6, 3) * ctoi(c1)
+								index += pow(6, 0) * ctoi(c2)
+								index += pow(6, 1) * ctoi(c3)
+								if pool[index] != 0 {
+									newpool[index] = 1
+								}
+
+								index = pow(6, 3) * ctoi(c0)
+								index += pow(6, 0) * ctoi(c1)
+								index += pow(6, 1) * ctoi(c2)
+								index += pow(6, 2) * ctoi(c3)
+								if pool[index] != 0 {
+									newpool[index] = 1
+								}
+							}
+						}
+					}
+				}
 			}
 
 		}
