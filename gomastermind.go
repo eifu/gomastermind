@@ -90,6 +90,9 @@ func main() {
 	var score_l []int
 
 	pool := make([]int, 6*6*6*6)
+	for i := 0; i < 6*6*6*6; i++ {
+		pool[i] = 1
+	}
 	for {
 		guesscount += 1
 		fmt.Printf("Guess %d\n", guesscount)
@@ -111,8 +114,8 @@ func main() {
 		score_l = splitScore(score)
 		fmt.Println(score_l)
 
-		a := finder(guess_l, score_l, pool)
-		fmt.Println(a)
+		pool = finder(guess_l, score_l, pool)
+		fmt.Println(pool)
 
 	}
 }
@@ -130,6 +133,7 @@ func pow(a, b int) int {
 }
 
 func finder(guess_l []byte, score_l, pool []int) []int {
+	newpool := make([]int, 6*6*6*6)
 	var colors [6]byte = [6]byte{'R', 'W', 'Y', 'G', 'u', 'k'}
 	var ctoi map[byte]int = map[byte]int{
 		R: 0,
@@ -155,7 +159,9 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 							index += pow(6, e[0]) * ctoi[c1]
 							index += pow(6, e[1]) * ctoi[c2]
 							index += pow(6, e[2]) * ctoi[c3]
-							pool[index] += 1
+							if pool[index] != 0 {
+								newpool[index] = 1
+							}
 						}
 					}
 				}
@@ -170,10 +176,9 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 						index += pow(6, e[0]) * ctoi[c1]
 						index += pow(6, e[1]) * ctoi[c2]
 						index += pow(6, e[2]) * ctoi[c3]
-						fmt.Println(index)
-						fmt.Println(e)
-						fmt.Println(ctoi[guess_l[ib]], ctoi[c1], ctoi[c2], ctoi[c3])
-						pool[index] += 1
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
 					}
 				}
 
@@ -184,7 +189,9 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 						index += pow(6, e[0]) * ctoi[c1]
 						index += pow(6, e[1]) * ctoi[c2]
 						index += pow(6, e[2]) * ctoi[c3]
-						pool[index] += 1
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
 					}
 				}
 
@@ -195,7 +202,9 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 						index += pow(6, e[0]) * ctoi[c1]
 						index += pow(6, e[1]) * ctoi[c2]
 						index += pow(6, e[2]) * ctoi[c3]
-						pool[index] += 1
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
 					}
 				}
 
@@ -214,5 +223,5 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 
 	}
 
-	return pool
+	return newpool
 }
