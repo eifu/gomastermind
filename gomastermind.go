@@ -18,21 +18,61 @@ const (
 	k byte = 'k'
 )
 
+func ctoi(c byte) int {
+	switch c {
+	case R:
+		return 0
+	case W:
+		return 1
+	case Y:
+		return 2
+	case G:
+		return 3
+	case u:
+		return 4
+	case k:
+		return 5
+	}
+	return 0
+
+}
+
+func itoc(i int) byte {
+	switch i {
+	case 0:
+		return R
+	case 1:
+		return W
+	case 2:
+		return Y
+	case 3:
+		return G
+	case 4:
+		return u
+	case 5:
+		return k
+	}
+	return 0
+}
+
 func hash(guess []byte) int {
 	acc := 0
-	var ctoi map[byte]int = map[byte]int{
-		R: 0,
-		W: 1,
-		Y: 2,
-		G: 3,
-		u: 4,
-		k: 5,
-	}
+
 	for _, g := range guess {
-		acc += ctoi[g]
+		acc += ctoi(g)
 		acc *= 6
 	}
 	return acc
+}
+
+func dehash(num int) []byte {
+	code := make([]byte, 4)
+	for i := 3; i >= 0; i-- {
+		code[i] = itoc(num / pow(6, i))
+		num = num - pow(6, i)*(num/pow(6, i))
+	}
+	return code
+
 }
 
 func splitScore(score string) []int {
@@ -112,6 +152,12 @@ func main() {
 		pool = finder(guess_l, score_l, pool)
 		fmt.Println(pool)
 
+		for index, e := range pool {
+			if e != 0 {
+				fmt.Println(index, string(dehash(index)))
+			}
+		}
+
 	}
 }
 
@@ -145,7 +191,7 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 	if score_l[0] == 1 {
 		// b=1
 		for ib, e := range b1 {
-			if score_l[0] == 0 {
+			if score_l[1] == 0 {
 				// w=0
 				for _, c1 := range colors { // 1st
 					for _, c2 := range colors { // 2nd
@@ -163,44 +209,63 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 
 			} else if score_l[1] == 1 {
 				// w=1
-				c1 := guess_l[e[0]]
-				for _, c2 := range colors {
-					for _, c3 := range colors {
 
-						index = pow(6, ib) * ctoi[guess_l[ib]]
-						index += pow(6, e[0]) * ctoi[c1]
-						index += pow(6, e[1]) * ctoi[c2]
-						index += pow(6, e[2]) * ctoi[c3]
-						if pool[index] != 0 {
-							newpool[index] = 1
+				for pos := 0; pos < 3; pos++ {
+					c0 := guess_l[e[pos]]
+					for _, c1 := range colors {
+						for _, c2 := range colors {
+
+							index = pow(6, ib) * ctoi[guess_l[ib]]
+							index += pow(6, e[0]) * ctoi[c0]
+							index += pow(6, e[1]) * ctoi[c1]
+							index += pow(6, e[2]) * ctoi[c2]
+							if pool[index] != 0 {
+								newpool[index] = 1
+							}
+
+							index = pow(6, ib) * ctoi[guess_l[ib]]
+							index += pow(6, e[0]) * ctoi[c0]
+							index += pow(6, e[2]) * ctoi[c1]
+							index += pow(6, e[1]) * ctoi[c2]
+							if pool[index] != 0 {
+								newpool[index] = 1
+							}
+
+							index = pow(6, ib) * ctoi[guess_l[ib]]
+							index += pow(6, e[1]) * ctoi[c0]
+							index += pow(6, e[0]) * ctoi[c1]
+							index += pow(6, e[2]) * ctoi[c2]
+							if pool[index] != 0 {
+								newpool[index] = 1
+							}
+
+							index = pow(6, ib) * ctoi[guess_l[ib]]
+							index += pow(6, e[1]) * ctoi[c0]
+							index += pow(6, e[2]) * ctoi[c1]
+							index += pow(6, e[0]) * ctoi[c2]
+							if pool[index] != 0 {
+								newpool[index] = 1
+							}
+
+							index = pow(6, ib) * ctoi[guess_l[ib]]
+							index += pow(6, e[2]) * ctoi[c0]
+							index += pow(6, e[0]) * ctoi[c1]
+							index += pow(6, e[1]) * ctoi[c2]
+							if pool[index] != 0 {
+								newpool[index] = 1
+							}
+
+							index = pow(6, ib) * ctoi[guess_l[ib]]
+							index += pow(6, e[2]) * ctoi[c0]
+							index += pow(6, e[1]) * ctoi[c1]
+							index += pow(6, e[0]) * ctoi[c2]
+							if pool[index] != 0 {
+								newpool[index] = 1
+							}
+
 						}
 					}
-				}
 
-				c2 := guess_l[e[1]]
-				for _, c1 := range colors {
-					for _, c3 := range colors {
-						index = pow(6, ib) * ctoi[guess_l[ib]]
-						index += pow(6, e[0]) * ctoi[c1]
-						index += pow(6, e[1]) * ctoi[c2]
-						index += pow(6, e[2]) * ctoi[c3]
-						if pool[index] != 0 {
-							newpool[index] = 1
-						}
-					}
-				}
-
-				c3 := guess_l[e[2]]
-				for _, c1 := range colors {
-					for _, c2 := range colors {
-						index = pow(6, ib) * ctoi[guess_l[ib]]
-						index += pow(6, e[0]) * ctoi[c1]
-						index += pow(6, e[1]) * ctoi[c2]
-						index += pow(6, e[2]) * ctoi[c3]
-						if pool[index] != 0 {
-							newpool[index] = 1
-						}
-					}
 				}
 
 			} else if score_l[1] == 2 {
