@@ -183,7 +183,7 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 	newpool := make([]int, 6*6*6*6)
 	var colors []byte = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
 	var c0, c1, c2, c3 byte
-	var b0 [1][]int = [1][]int{[]int{1, 2, 3, 4}}
+	var b0 [1][]int = [1][]int{[]int{0, 1, 2, 3}}
 	var b1 [4][]int = [4][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
 	//	var b2 [6][]int = [6][]int{[]int{1, 2}, []int{1, 3}, []int{1, 4}, []int{2, 3}, []int{2, 4}, []int{3, 4}}
 	//var b3 [4][]int = [4][]int{[]int{1}, []int{2}, []int{3}, []int{4}}
@@ -193,7 +193,6 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 		for _, e := range b0 {
 			if score_l[1] == 0 {
 				// w=0
-				_ = e
 				for i := 0; i < 4; i++ {
 					colors = elimColor(guess_l[i], colors)
 				}
@@ -214,47 +213,49 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 				}
 			} else if score_l[1] == 1 {
 				// w=1
-				// TODO: not in the right position.
-				for pos := 0; pos < 4; pos++ {
-					c0 := guess_l[pos]
+				// pick a color from guess_l, then remove all colors in guess_l from colors
+				for _, pos := range e {
+					c0 := guess_l[pos]       // pick a color from guess_l
+					for i := 0; i < 4; i++ { // remove all colors from colors
+						colors = elimColor(guess_l[i], colors)
+					}
 					for _, c1 := range colors {
 						for _, c2 := range colors {
 							for _, c3 := range colors {
-								index = pow(6, 0) * ctoi(c0)
-								index += pow(6, 1) * ctoi(c1)
-								index += pow(6, 2) * ctoi(c2)
-								index += pow(6, 3) * ctoi(c3)
-								if pool[index] != 0 {
-									newpool[index] = 1
+								if c0 != guess_l[(pos+1)%4] {
+									index = pow(6, (pos+1)%4) * ctoi(c0)
+									index += pow(6, (pos+2)%4) * ctoi(c1)
+									index += pow(6, (pos+3)%4) * ctoi(c2)
+									index += pow(6, pos) * ctoi(c3)
+									if pool[index] != 0 {
+										newpool[index] = 1
+									}
 								}
 
-								index = pow(6, 1) * ctoi(c0)
-								index += pow(6, 2) * ctoi(c1)
-								index += pow(6, 3) * ctoi(c2)
-								index += pow(6, 0) * ctoi(c3)
-								if pool[index] != 0 {
-									newpool[index] = 1
+								if c0 != guess_l[(pos+2)%4] {
+									index = pow(6, (pos+2)%4) * ctoi(c0)
+									index += pow(6, (pos+3)%4) * ctoi(c1)
+									index += pow(6, pos) * ctoi(c2)
+									index += pow(6, (pos+1)%4) * ctoi(c3)
+									if pool[index] != 0 {
+										newpool[index] = 1
+									}
 								}
 
-								index = pow(6, 2) * ctoi(c0)
-								index += pow(6, 3) * ctoi(c1)
-								index += pow(6, 0) * ctoi(c2)
-								index += pow(6, 1) * ctoi(c3)
-								if pool[index] != 0 {
-									newpool[index] = 1
-								}
-
-								index = pow(6, 3) * ctoi(c0)
-								index += pow(6, 0) * ctoi(c1)
-								index += pow(6, 1) * ctoi(c2)
-								index += pow(6, 2) * ctoi(c3)
-								if pool[index] != 0 {
-									newpool[index] = 1
+								if c0 != guess_l[(pos+3)%4] {
+									index = pow(6, (pos+3)%4) * ctoi(c0)
+									index += pow(6, pos) * ctoi(c1)
+									index += pow(6, (pos+1)%4) * ctoi(c2)
+									index += pow(6, (pos+2)%4) * ctoi(c3)
+									if pool[index] != 0 {
+										newpool[index] = 1
+									}
 								}
 							}
 						}
 					}
 				}
+
 			} else if score_l[1] == 2 {
 				// w=2
 				// TODO: not in the right position.
