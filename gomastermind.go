@@ -240,21 +240,12 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 
 			} else if score_l[1] == 2 {
 				// w=2
-				// TODO: not in the right position.
-				// 01, 02, 03, 10, 12, 13, 20, 21, 23, 30, 31, 32
-				combos := [12][]int{
-					[]int{0, 1},
-					[]int{0, 2},
-					[]int{0, 3},
-					[]int{1, 0},
-					[]int{1, 2},
-					[]int{1, 3},
-					[]int{2, 0},
-					[]int{2, 1},
-					[]int{2, 3},
-					[]int{3, 0},
-					[]int{3, 1},
-					[]int{3, 2}}
+				combos := [12][]int{[]int{0, 1}, []int{1, 0},
+					[]int{0, 2}, []int{2, 0},
+					[]int{0, 3}, []int{3, 0},
+					[]int{1, 2}, []int{2, 1},
+					[]int{1, 3}, []int{3, 1},
+					[]int{2, 3}, []int{3, 2}}
 
 				for i := 0; i < 4; i++ { // remove all colors from colors
 					colors = elimColor(guess_l[i], colors)
@@ -273,6 +264,33 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 									if pool[index] != 0 {
 										newpool[index] = 1
 									}
+								}
+							}
+						}
+					}
+				}
+			} else if score_l[1] == 3 {
+				// w=3
+				combos := [...][]int{
+					[]int{0, 1, 2}, []int{0, 1, 3}, []int{0, 2, 1}, []int{0, 2, 3}, []int{0, 3, 1}, []int{0, 3, 2},
+					[]int{1, 0, 2}, []int{1, 0, 3}, []int{1, 2, 0}, []int{1, 2, 3}, []int{1, 3, 0}, []int{1, 3, 2},
+					[]int{2, 0, 1}, []int{2, 0, 3}, []int{2, 1, 0}, []int{2, 1, 3}, []int{2, 3, 0}, []int{2, 3, 1},
+					[]int{3, 0, 1}, []int{3, 0, 2}, []int{3, 1, 0}, []int{3, 1, 2}, []int{3, 2, 0}, []int{3, 2, 1}}
+				for i := 0; i < 4; i++ {
+					colors = elimColor(guess_l[i], colors)
+				}
+				for _, pos := range e {
+					for _, src := range combos {
+						c0 = guess_l[src[0]]
+						c1 = guess_l[src[1]]
+						c2 = guess_l[src[2]]
+						for _, c3 = range colors {
+							for idst, dst := range combos {
+								if c0 != guess_l[dst[0]] && c1 != guess_l[dst[1]] && c2 != guess_l[dst[2]] {
+									index = pow(6, dst[0]) * ctoi(c0)
+									index += pow(6, dst[1]) * ctoi(c1)
+									index += pow(6, dst[2]) * ctoi(c2)
+
 								}
 							}
 						}
