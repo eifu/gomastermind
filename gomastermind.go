@@ -288,19 +288,46 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 					c2 = guess_l[src[permu[2]]]
 
 					for _, c3 = range colors {
-						for _, dst := range combos {
+						for idst, dst := range combos {
 							for _, permu := range permus {
 								if c0 != guess_l[dst[permu[0]]] &&
 									c1 != guess_l[dst[permu[1]]] &&
-									c2 != guess_l[dst[permu[2]]] {
-									index = pow(6, dst[0]) * ctoi(c0)
-									index += pow(6, dst[1]) * ctoi(c1)
-									index += pow(6, dst[2]) * ctoi(c2)
+									c2 != guess_l[dst[permu[2]]] &&
+									c3 != guess_l[idst] {
+
+									index = pow(6, dst[permu[0]]) * ctoi(c0)
+									index += pow(6, dst[permu[1]]) * ctoi(c1)
+									index += pow(6, dst[permu[2]]) * ctoi(c2)
+									index += pow(6, idst) * ctoi(c3)
+
 									if pool[index] != 0 {
 										newpool[index] = 1
 									}
 								}
 							}
+						}
+					}
+				}
+			}
+			return newpool
+		} else if score_l[1] == 4 {
+			// w=4
+			combos := [...][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
+			// possible combination to take 3 numbers from 0, 1, 2, 3
+			permus := [...][]int{[]int{0, 1, 2}, []int{0, 2, 1}, []int{1, 0, 2}, []int{1, 2, 0}, []int{2, 0, 1}, []int{2, 1, 0}}
+			// possible permutation to choose 3 numbers
+			for idst, dst := range combos {
+				for _, permu := range permus {
+					if guess_l[0] != guess_l[dst[permu[0]]] &&
+						guess_l[1] != guess_l[dst[permu[1]]] &&
+						guess_l[2] != guess_l[dst[permu[2]]] &&
+						guess_l[3] != guess_l[idst] {
+						index = pow(6, dst[permu[0]]) * ctoi(guess_l[0])
+						index += pow(6, dst[permu[1]]) * ctoi(guess_l[1])
+						index += pow(6, dst[permu[2]]) * ctoi(guess_l[2])
+						index += pow(6, idst) * ctoi(guess_l[3])
+						if pool[index] != 0 {
+							newpool[index] = 1
 						}
 					}
 				}
@@ -363,174 +390,40 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 				combos := [...][]int{[]int{1, 2}, []int{0, 2}, []int{0, 1}}
 
 				for isrc, src := range combos {
-					_ = isrc
-					_ = src
-					/*c0 := guess_l[src[0]]
-					c1 := guess_l[src[1]]
-					colors = elimColor(guess_l[isrc], colors)
-					for _, c2 := range colors{
-						for idst, dst := range combos{
 
+					c0 := guess_l[belects[src[0]]]
+					c1 := guess_l[belects[src[1]]]
+					colors = elimColor(guess_l[belects[isrc]], colors)
+					for _, c2 := range colors {
+						for idst, dst := range combos {
+							if c0 != guess_l[belects[dst[0]]] &&
+								c1 != guess_l[belects[dst[1]]] &&
+								c2 != guess_l[belects[idst]] {
+								index = pow(6, ib) * ctoi(guess_l[ib])
+								index += pow(6, belects[dst[0]]) * ctoi(c0)
+								index += pow(6, belects[dst[1]]) * ctoi(c1)
+								index += pow(6, belects[idst]) * ctoi(c2)
+								if pool[index] != 0 {
+									newpool[index] = 1
+								}
+							}
+
+							if c0 != guess_l[belects[dst[1]]] &&
+								c1 != guess_l[belects[dst[0]]] &&
+								c2 != guess_l[belects[idst]] {
+								index = pow(6, ib) * ctoi(guess_l[ib])
+								index += pow(6, belects[dst[1]]) * ctoi(c0)
+								index += pow(6, belects[dst[0]]) * ctoi(c1)
+								index += pow(6, belects[idst]) * ctoi(c2)
+								if pool[index] != 0 {
+									newpool[index] = 1
+								}
+							}
 
 						}
-					}*/
-					/*
-						c0 := guess_l[e[0]]
-						c1 := guess_l[e[1]]
-						for _, c2 := range colors {
-
-								index = pow(6, ib) * ctoi(guess_l[ib])
-								index += pow(6, belects[0]) * ctoi(c0)
-								index += pow(6, belects[1]) * ctoi(c1)
-								index += pow(6, belects[2]) * ctoi(c2)
-								if pool[index] != 0 {
-									newpool[index] = 1
-								}
-
-								index = pow(6, ib) * ctoi(guess_l[ib])
-								index += pow(6, belects[0]) * ctoi(c0)
-								index += pow(6, e[2]) * ctoi(c1)
-								index += pow(6, e[1]) * ctoi(c2)
-								if pool[index] != 0 {
-									newpool[index] = 1
-								}
-
-								index = pow(6, ib) * ctoi(guess_l[ib])
-								index += pow(6, e[1]) * ctoi(c0)
-								index += pow(6, e[0]) * ctoi(c1)
-								index += pow(6, e[2]) * ctoi(c2)
-								if pool[index] != 0 {
-									newpool[index] = 1
-								}
-
-								index = pow(6, ib) * ctoi(guess_l[ib])
-								index += pow(6, e[1]) * ctoi(c0)
-								index += pow(6, e[2]) * ctoi(c1)
-								index += pow(6, e[0]) * ctoi(c2)
-								if pool[index] != 0 {
-									newpool[index] = 1
-								}
-
-								index = pow(6, ib) * ctoi(guess_l[ib])
-								index += pow(6, e[2]) * ctoi(c0)
-								index += pow(6, e[0]) * ctoi(c1)
-								index += pow(6, e[1]) * ctoi(c2)
-								if pool[index] != 0 {
-									newpool[index] = 1
-								}
-
-								index = pow(6, ib) * ctoi(guess_l[ib])
-								index += pow(6, e[2]) * ctoi(c0)
-								index += pow(6, e[1]) * ctoi(c1)
-								index += pow(6, e[0]) * ctoi(c2)
-								if pool[index] != 0 {
-									newpool[index] = 1
-								}
-
-						}
-						c0 = guess_l[e[0]]
-						c2 := guess_l[e[2]]
-						for _, c1 := range colors {
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, e[0]) * ctoi(c0)
-							index += pow(6, e[1]) * ctoi(c1)
-							index += pow(6, e[2]) * ctoi(c2)
-							if pool[index] != 0 {
-								newpool[index] = 1
-							}
-
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, e[0]) * ctoi(c0)
-							index += pow(6, e[2]) * ctoi(c1)
-							index += pow(6, e[1]) * ctoi(c2)
-							if pool[index] != 0 {
-								newpool[index] = 1
-							}
-
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, e[1]) * ctoi(c0)
-							index += pow(6, e[0]) * ctoi(c1)
-							index += pow(6, e[2]) * ctoi(c2)
-							if pool[index] != 0 {
-								newpool[index] = 1
-							}
-
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, e[1]) * ctoi(c0)
-							index += pow(6, e[2]) * ctoi(c1)
-							index += pow(6, e[0]) * ctoi(c2)
-							if pool[index] != 0 {
-								newpool[index] = 1
-							}
-
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, e[2]) * ctoi(c0)
-							index += pow(6, e[0]) * ctoi(c1)
-							index += pow(6, e[1]) * ctoi(c2)
-							if pool[index] != 0 {
-								newpool[index] = 1
-							}
-
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, e[2]) * ctoi(c0)
-							index += pow(6, e[1]) * ctoi(c1)
-							index += pow(6, e[0]) * ctoi(c2)
-							if pool[index] != 0 {
-								newpool[index] = 1
-							}
-						}
-						c1 = guess_l[e[1]]
-						c2 = guess_l[e[2]]
-						for _, c0 := range colors {
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, e[0]) * ctoi(c0)
-							index += pow(6, e[1]) * ctoi(c1)
-							index += pow(6, e[2]) * ctoi(c2)
-							if pool[index] != 0 {
-								newpool[index] = 1
-							}
-
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, e[0]) * ctoi(c0)
-							index += pow(6, e[2]) * ctoi(c1)
-							index += pow(6, e[1]) * ctoi(c2)
-							if pool[index] != 0 {
-								newpool[index] = 1
-							}
-
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, e[1]) * ctoi(c0)
-							index += pow(6, e[0]) * ctoi(c1)
-							index += pow(6, e[2]) * ctoi(c2)
-							if pool[index] != 0 {
-								newpool[index] = 1
-							}
-
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, e[1]) * ctoi(c0)
-							index += pow(6, e[2]) * ctoi(c1)
-							index += pow(6, e[0]) * ctoi(c2)
-							if pool[index] != 0 {
-								newpool[index] = 1
-							}
-
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, e[2]) * ctoi(c0)
-							index += pow(6, e[0]) * ctoi(c1)
-							index += pow(6, e[1]) * ctoi(c2)
-							if pool[index] != 0 {
-								newpool[index] = 1
-							}
-
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, e[2]) * ctoi(c0)
-							index += pow(6, e[1]) * ctoi(c1)
-							index += pow(6, e[0]) * ctoi(c2)
-							if pool[index] != 0 {
-								newpool[index] = 1
-							}
-					*/
+					}
 				}
+				return newpool
 
 			} else {
 				// w=3 123
