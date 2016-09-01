@@ -222,33 +222,15 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 					for _, c1 := range colors {
 						for _, c2 := range colors {
 							for _, c3 := range colors {
-								if c0 != guess_l[(pos+1)%4] {
-									index = pow(6, (pos+1)%4) * ctoi(c0)
-									index += pow(6, (pos+2)%4) * ctoi(c1)
-									index += pow(6, (pos+3)%4) * ctoi(c2)
-									index += pow(6, pos) * ctoi(c3)
-									if pool[index] != 0 {
-										newpool[index] = 1
-									}
-								}
-
-								if c0 != guess_l[(pos+2)%4] {
-									index = pow(6, (pos+2)%4) * ctoi(c0)
-									index += pow(6, (pos+3)%4) * ctoi(c1)
-									index += pow(6, pos) * ctoi(c2)
-									index += pow(6, (pos+1)%4) * ctoi(c3)
-									if pool[index] != 0 {
-										newpool[index] = 1
-									}
-								}
-
-								if c0 != guess_l[(pos+3)%4] {
-									index = pow(6, (pos+3)%4) * ctoi(c0)
-									index += pow(6, pos) * ctoi(c1)
-									index += pow(6, (pos+1)%4) * ctoi(c2)
-									index += pow(6, (pos+2)%4) * ctoi(c3)
-									if pool[index] != 0 {
-										newpool[index] = 1
+								for i := 1; i < 4; i++ {
+									if c0 != guess_l[(pos+1)%4] {
+										index = pow(6, (pos+i)%4) * ctoi(c0)
+										index += pow(6, (pos+i+1)%4) * ctoi(c1)
+										index += pow(6, (pos+i+2)%4) * ctoi(c2)
+										index += pow(6, (pos+i+3)%4) * ctoi(c3)
+										if pool[index] != 0 {
+											newpool[index] = 1
+										}
 									}
 								}
 							}
