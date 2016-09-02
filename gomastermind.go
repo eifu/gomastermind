@@ -32,7 +32,6 @@ func ctoi(c byte) int {
 		return 5
 	}
 	return 0
-
 }
 
 func itoc(i int) byte {
@@ -146,12 +145,14 @@ func main() {
 
 		pool = finder(guess_l, score_l, pool)
 		fmt.Println(pool)
-
+		var count int
 		for index, e := range pool {
 			if e != 0 {
+				count += 1
 				fmt.Println(index, string(dehash(index)))
 			}
 		}
+		fmt.Println(count, "cases found")
 
 	}
 }
@@ -241,24 +242,31 @@ func finder(guess_l []byte, score_l, pool []int) []int {
 
 		} else if score_l[1] == 2 {
 			// w=2
-			combos := [12][]int{
-				[]int{0, 1}, []int{1, 0},
+			combos := [...][]int{[]int{0, 1}, []int{1, 0},
 				[]int{0, 2}, []int{2, 0},
 				[]int{0, 3}, []int{3, 0},
 				[]int{1, 2}, []int{2, 1},
 				[]int{1, 3}, []int{3, 1},
 				[]int{2, 3}, []int{3, 2}}
 
-			for i := 0; i < 4; i++ { // remove all colors from colors
-				colors = elimColor(guess_l[i], colors)
-			}
-			for _, src := range combos {
+			for isrc, src := range combos {
+
+				colors = elimColor(guess_l[combos[11-isrc][0]], colors)
+				colors = elimColor(guess_l[combos[11-isrc][1]], colors)
+
 				c0 = guess_l[src[0]]
 				c1 = guess_l[src[1]]
+
 				for _, c2 = range colors {
 					for _, c3 = range colors {
+						// c2 and c3 are topological
+
 						for idst, dst := range combos {
-							if c0 != guess_l[dst[0]] && c1 != guess_l[dst[1]] {
+
+							if c0 != guess_l[dst[0]] &&
+								c1 != guess_l[dst[1]] &&
+								c2 != guess_l[combos[11-idst][0]] &&
+								c3 != guess_l[combos[11-idst][1]] {
 								index = pow(6, dst[0]) * ctoi(c0)
 								index += pow(6, dst[1]) * ctoi(c1)
 								index += pow(6, combos[11-idst][0]) * ctoi(c2)
