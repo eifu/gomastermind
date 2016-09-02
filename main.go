@@ -7,15 +7,6 @@ import (
 	"os"
 )
 
-const (
-	R byte = 'R'
-	W byte = 'W'
-	Y byte = 'Y'
-	G byte = 'G'
-	U byte = 'U'
-	K byte = 'K'
-)
-
 func main() {
 	fmt.Println("welcome to master mind game.")
 	reader := bufio.NewReader(os.Stdin)
@@ -38,7 +29,7 @@ func main() {
 			os.Exit(1)
 		}
 		guess_l = gomastermind.SplitGuess(guess)
-		fmt.Println(guess_l)
+
 		fmt.Println("enter score: x for right color, right position, o for right color but in the wrong position.")
 		score, err := reader.ReadString('\n')
 		if err != nil {
@@ -47,17 +38,17 @@ func main() {
 		}
 
 		score_l = gomastermind.SplitScore(score)
-		fmt.Println(score_l)
 
 		pool = gomastermind.Finder(guess_l, score_l, pool)
-		fmt.Println(pool)
-		var count int
+
+		count := 0
 		for index, e := range pool {
 			if e != 0 {
 				count += 1
 				fmt.Println(index, string(gomastermind.Dehash(index)))
 			}
 		}
+
 		fmt.Println(count, "cases found")
 
 	}
