@@ -50,12 +50,10 @@ func itoc(i int) byte {
 	return 0
 }
 
-func hash(guess []byte) int {
+func Hash(guess []byte) int {
 	acc := 0
-
-	for _, g := range guess {
-		acc += ctoi(g)
-		acc *= 6
+	for i, g := range guess {
+		acc += pow(6, i) * ctoi(g)
 	}
 	return acc
 }
@@ -67,7 +65,6 @@ func Dehash(num int) []byte {
 		num = num - pow(6, i)*(num/pow(6, i))
 	}
 	return code
-
 }
 
 func split(s string) []byte {
