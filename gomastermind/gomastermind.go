@@ -1,9 +1,7 @@
-package main
+package gomastermind
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strings"
 )
 
@@ -62,7 +60,7 @@ func hash(guess []byte) int {
 	return acc
 }
 
-func dehash(num int) []byte {
+func Dehash(num int) []byte {
 	code := make([]byte, 4)
 	for i := 3; i >= 0; i-- {
 		code[i] = itoc(num / pow(6, i))
@@ -80,7 +78,7 @@ func split(s string) []byte {
 	return a
 }
 
-func splitScore(score string) []int {
+func SplitScore(score string) []int {
 	a := make([]int, 2)
 	for i := 0; i < len(score); i++ {
 		switch score[i] {
@@ -93,7 +91,7 @@ func splitScore(score string) []int {
 	return a
 }
 
-func splitGuess(guess string) []byte {
+func SplitGuess(guess string) []byte {
 	a := make([]byte, 0, len(guess))
 	fmt.Println(split(guess))
 
@@ -108,53 +106,6 @@ func splitGuess(guess string) []byte {
 		a = append(a, byte(guessSplit[i]))
 	}
 	return a
-}
-
-func main() {
-	fmt.Println("welcome to master mind game.")
-	reader := bufio.NewReader(os.Stdin)
-	var guesscount int
-
-	var guess_l []byte
-	var score_l []int
-
-	pool := make([]int, 6*6*6*6)
-	for i := 0; i < 6*6*6*6; i++ {
-		pool[i] = 1
-	}
-	for {
-		guesscount += 1
-		fmt.Printf("Guess %d\n", guesscount)
-		fmt.Println("enter color: red(R), white(W), yellow(Y), green(G), blue(Bu), and black(Bk).")
-		guess, err := reader.ReadString('\n')
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "reader: %v\n", guess, err)
-			os.Exit(1)
-		}
-		guess_l = splitGuess(guess)
-		fmt.Println(guess_l)
-		fmt.Println("enter score: x for right color, right position, o for right color but in the wrong position.")
-		score, err := reader.ReadString('\n')
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "reader: %v\n", score, err)
-			os.Exit(1)
-		}
-
-		score_l = splitScore(score)
-		fmt.Println(score_l)
-
-		pool = finder(guess_l, score_l, pool)
-		fmt.Println(pool)
-		var count int
-		for index, e := range pool {
-			if e != 0 {
-				count += 1
-				fmt.Println(index, string(dehash(index)))
-			}
-		}
-		fmt.Println(count, "cases found")
-
-	}
 }
 
 func pow(a, b int) int {
@@ -180,7 +131,7 @@ func elimColor(c byte, colors []byte) []byte {
 	return colors
 }
 
-func finder(guess_l []byte, score_l, pool []int) []int {
+func Finder(guess_l []byte, score_l, pool []int) []int {
 	newpool := make([]int, 6*6*6*6)
 	var colors []byte = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
 	var c0, c1, c2, c3 byte
