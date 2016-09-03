@@ -302,31 +302,33 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 
 	} else if score_l[0] == 1 {
 		// b=1
-		for ib, belects := range b1 {
-			if score_l[1] == 0 {
-				// w=0
+		if score_l[1] == 0 {
+			// w=0
+			for ib, belects := range b1 {
+				c0 = guess_l[ib]
+
 				for _, belect := range belects {
 					colors = elimColor(guess_l[belect], colors)
 				}
-				for _, c0 := range colors { // 1st
-					for _, c1 := range colors { // 2nd
-						for _, c2 := range colors { // 3rd
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, belects[0]) * ctoi(c0)
-							index += pow(6, belects[1]) * ctoi(c1)
-							index += pow(6, belects[2]) * ctoi(c2)
+				for _, c1 := range colors { // 1st
+					for _, c2 := range colors { // 2nd
+						for _, c3 := range colors { // 3rd
+							index = pow(6, ib) * ctoi(c0)
+							index += pow(6, belects[0]) * ctoi(c1)
+							index += pow(6, belects[1]) * ctoi(c2)
+							index += pow(6, belects[2]) * ctoi(c3)
 							if pool[index] != 0 {
 								newpool[index] = 1
 							}
 						}
 					}
 				}
-				return newpool
 
-			} else if score_l[1] == 1 {
-				// w=1
-				combos := [...][]int{[]int{1, 2}, []int{0, 2}, []int{0, 1}}
-
+			}
+		} else if score_l[1] == 1 {
+			// w=1
+			combos := [...][]int{[]int{1, 2}, []int{0, 2}, []int{0, 1}}
+			for ib, belects := range b1 {
 				for isrc, src := range combos {
 					c0 := guess_l[belects[isrc]]
 					colors = elimColor(guess_l[belects[src[0]]], colors)
@@ -349,11 +351,13 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 						}
 					}
 				}
-			} else if score_l[1] == 2 {
-				// w=2 01, 02, 12
+			}
 
-				combos := [...][]int{[]int{1, 2}, []int{0, 2}, []int{0, 1}}
+		} else if score_l[1] == 2 {
+			// w=2 01, 02, 12
 
+			combos := [...][]int{[]int{1, 2}, []int{0, 2}, []int{0, 1}}
+			for ib, belects := range b1 {
 				for isrc, src := range combos {
 
 					c0 := guess_l[belects[src[0]]]
@@ -384,16 +388,14 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 									newpool[index] = 1
 								}
 							}
-
 						}
 					}
 				}
-				return newpool
-
-			} else {
-				// w=3 123
 			}
+
 		}
+
+		return newpool
 	} else if score_l[0] == 2 {
 
 	} else if score_l[0] == 3 {
