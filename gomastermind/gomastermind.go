@@ -163,20 +163,29 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 		} else if score_l[1] == 1 {
 			// w=1
 			// pick a color from guess_l, then remove all colors in guess_l from colors
-			for pos := 0; pos < 4; pos++ {
-				c0 = guess_l[pos]        // pick a color from guess_l
-				for i := 0; i < 4; i++ { // remove all colors from colors
-					colors = elimColor(guess_l[i], colors)
-				}
-				for _, c1 = range colors {
+			for c0pos := 0; c0pos < 4; c0pos++ {
+				c0 = guess_l[c0pos] // pick a color from guess_l
+
+				combos := [4][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
+
+				// remove the rest of three colors from the potential colors
+				colors = elimColor(guess_l[combos[c0pos][0]], colors)
+				colors = elimColor(guess_l[combos[c0pos][1]], colors)
+				colors = elimColor(guess_l[combos[c0pos][2]], colors)
+
+				for _, c1 = range colors { // c1, c2 and c3 are topological
 					for _, c2 = range colors {
 						for _, c3 = range colors {
-							for i := 1; i < 4; i++ { // i from 1 to 3
-								if c0 != guess_l[(pos+1)%4] {
-									index = pow(6, (pos+i)%4) * ctoi(c0)
-									index += pow(6, (pos+i+1)%4) * ctoi(c1)
-									index += pow(6, (pos+i+2)%4) * ctoi(c2)
-									index += pow(6, (pos+i+3)%4) * ctoi(c3)
+							for i := 0; i < 3; i++ {
+								if c0 != guess_l[combos[c0pos][i]] &&
+									c1 != guess_l[combos[combos[c0pos][i]][0]] &&
+									c2 != guess_l[combos[combos[c0pos][i]][1]] &&
+									c3 != guess_l[combos[combos[c0pos][i]][2]] {
+
+									index = pow(6, combos[c0pos][i]) * ctoi(c0)
+									index += pow(6, combos[combos[c0pos][i]][0]) * ctoi(c1)
+									index += pow(6, combos[combos[c0pos][i]][1]) * ctoi(c2)
+									index += pow(6, combos[combos[c0pos][i]][2]) * ctoi(c3)
 									if pool[index] != 0 {
 										newpool[index] = 1
 									}
