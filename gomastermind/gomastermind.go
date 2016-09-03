@@ -176,16 +176,16 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 				for _, c1 = range colors { // c1, c2 and c3 are topological
 					for _, c2 = range colors {
 						for _, c3 = range colors {
-							for i := 0; i < 3; i++ {
-								if c0 != guess_l[combos[c0pos][i]] &&
-									c1 != guess_l[combos[combos[c0pos][i]][0]] &&
-									c2 != guess_l[combos[combos[c0pos][i]][1]] &&
-									c3 != guess_l[combos[combos[c0pos][i]][2]] {
+							for _, dst := range combos[c0pos] {
+								if c0 != guess_l[dst] &&
+									c1 != guess_l[combos[dst][0]] &&
+									c2 != guess_l[combos[dst][1]] &&
+									c3 != guess_l[combos[dst][2]] {
 
-									index = pow(6, combos[c0pos][i]) * ctoi(c0)
-									index += pow(6, combos[combos[c0pos][i]][0]) * ctoi(c1)
-									index += pow(6, combos[combos[c0pos][i]][1]) * ctoi(c2)
-									index += pow(6, combos[combos[c0pos][i]][2]) * ctoi(c3)
+									index = pow(6, dst) * ctoi(c0)
+									index += pow(6, combos[dst][0]) * ctoi(c1)
+									index += pow(6, combos[dst][1]) * ctoi(c2)
+									index += pow(6, combos[dst][2]) * ctoi(c3)
 									if pool[index] != 0 {
 										newpool[index] = 1
 									}
