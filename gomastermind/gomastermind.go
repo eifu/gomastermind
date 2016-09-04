@@ -126,6 +126,19 @@ func elimColor(c byte, colors []byte) []byte {
 	return colors
 }
 
+func permute(a []byte, l, r int) {
+	var i int
+	if l == r {
+		fmt.Printf("%v\n", string(a))
+	} else {
+		for i = l; i <= r; i++ {
+			a[i], a[l] = a[l], a[i]
+			permute(a, l+1, r)
+			a[i], a[l] = a[l], a[i]
+		}
+	}
+}
+
 func Finder(guess_l []byte, score_l, pool []int) []int {
 	newpool := make([]int, 6*6*6*6)
 	var colors []byte = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
@@ -201,40 +214,40 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 
 	} else if score_l[0] == 0 && score_l[1] == 2 {
 		// black 0, white 2
-		combos := [...][]int{[]int{0, 1}, []int{1, 0},
-			[]int{0, 2}, []int{2, 0},
-			[]int{0, 3}, []int{3, 0},
-			[]int{1, 2}, []int{2, 1},
-			[]int{1, 3}, []int{3, 1},
-			[]int{2, 3}, []int{3, 2}}
+		combos := [...][]int{[]int{0, 1}, []int{0, 2}, []int{0, 3}, []int{1, 2}, []int{1, 3}, []int{2, 3}}
+		permus := [...][]int{[]int{0, 1}, []int{1, 0}}
 
 		for isrc, src := range combos {
-			colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
-			colors = elimColor(guess_l[combos[11-isrc][0]], colors)
-			colors = elimColor(guess_l[combos[11-isrc][1]], colors)
 
+			// c0 and c1 are topological
 			c0 = guess_l[src[0]]
 			c1 = guess_l[src[1]]
 
+			// remove the rest of two colors
+			colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+			colors = elimColor(guess_l[combos[5-isrc][0]], colors)
+			colors = elimColor(guess_l[combos[5-isrc][1]], colors)
+
+			// c2 and c3 are topological
 			for _, c2 = range colors {
 				for _, c3 = range colors {
-					// c2 and c3 are topological
+					// TODO: make function that gives permutation of 4 numbers
 
-					for idst, dst := range combos {
-
-						if c0 != guess_l[dst[0]] &&
-							c1 != guess_l[dst[1]] &&
-							c2 != guess_l[combos[11-idst][0]] &&
-							c3 != guess_l[combos[11-idst][1]] {
-							index = pow(6, dst[0]) * ctoi(c0)
-							index += pow(6, dst[1]) * ctoi(c1)
-							index += pow(6, combos[11-idst][0]) * ctoi(c2)
-							index += pow(6, combos[11-idst][1]) * ctoi(c3)
+					for _, permu := range permus {
+						if c0 != guess_l[combos[5-isrc][permu[0]]] &&
+							c1 != guess_l[combos[5-isrc][permu[1]]] &&
+							c2 != guess_l[src[0]] &&
+							c3 != guess_l[src[1]] {
+							index = pow(6, combos[5-isrc][permu[0]]) * ctoi(c0)
+							index += pow(6, combos[5-isrc][permu[1]]) * ctoi(c1)
+							index += pow(6, src[0]) * ctoi(c2)
+							index += pow(6, src[1]) * ctoi(c3)
 							if pool[index] != 0 {
 								newpool[index] = 1
 							}
 						}
 					}
+
 				}
 			}
 		}
@@ -332,10 +345,11 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 		// black 1, white 1
 		combos := [...][]int{[]int{1, 2}, []int{0, 2}, []int{0, 1}}
 		for ib, belects := range b1 {
-			colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+
 			for isrc, src := range combos {
 				c0 = guess_l[ib]            // c0 is the right color in the right position
 				c1 = guess_l[belects[isrc]] // c1 is the fixed color, not in the position
+				colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
 				colors = elimColor(guess_l[belects[src[0]]], colors)
 				colors = elimColor(guess_l[belects[src[1]]], colors)
 				for _, c2 := range colors { // c2 and c3 are topologic
@@ -363,15 +377,18 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 
 		combos := [...][]int{[]int{1, 2}, []int{0, 2}, []int{0, 1}}
 		for ib, belects := range b1 {
-
+			// c0 is right color in right position
 			c0 = guess_l[ib]
 
 			for isrc, src := range combos {
-
+				// c1, c2 are right color, but un wrong position
 				c1 := guess_l[belects[src[0]]]
 				c2 := guess_l[belects[src[1]]]
 
+				// remove 1 color out of rest of 3 colors.
+				colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
 				colors = elimColor(guess_l[belects[isrc]], colors)
+
 				for _, c3 := range colors {
 					for idst, dst := range combos {
 						if c1 != guess_l[belects[dst[0]]] &&
@@ -386,13 +403,13 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 							}
 						}
 
-						if c0 != guess_l[belects[dst[1]]] &&
-							c1 != guess_l[belects[dst[0]]] &&
-							c2 != guess_l[belects[idst]] {
-							index = pow(6, ib) * ctoi(guess_l[ib])
-							index += pow(6, belects[dst[1]]) * ctoi(c0)
-							index += pow(6, belects[dst[0]]) * ctoi(c1)
-							index += pow(6, belects[idst]) * ctoi(c2)
+						if c1 != guess_l[belects[dst[1]]] &&
+							c2 != guess_l[belects[dst[0]]] &&
+							c3 != guess_l[belects[idst]] {
+							index = pow(6, ib) * ctoi(c0)
+							index += pow(6, belects[dst[1]]) * ctoi(c1)
+							index += pow(6, belects[dst[0]]) * ctoi(c2)
+							index += pow(6, belects[idst]) * ctoi(c3)
 							if pool[index] != 0 {
 								newpool[index] = 1
 							}

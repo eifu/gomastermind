@@ -32,3 +32,10 @@ func TestElimColor(t *testing.T) {
 		t.Error("Expected", colors, ", got", c2)
 	}
 }
+
+func TestPermute(t *testing.T) {
+	a := []byte{'a', 'b', 'c', 'd'}
+	var n int = 4
+	permute(a, 0, n-1)
+
+}
