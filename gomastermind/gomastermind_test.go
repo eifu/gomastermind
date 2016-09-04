@@ -2,6 +2,7 @@ package gomastermind
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 )
 
@@ -37,5 +38,43 @@ func TestPermute(t *testing.T) {
 	a := []byte{'a', 'b', 'c', 'd'}
 	var n int = 4
 	permute(a, 0, n-1)
+
+}
+
+func TestCase1(t *testing.T) {
+	expected := []byte{R, U, Y, Y}
+	pool := make([]int, 6*6*6*6)
+	for i := 0; i < 6*6*6*6; i++ {
+		pool[i] = 1
+	}
+
+	var guess_l []byte
+	var score_l []int
+
+	guess_l = []byte{U, W, G, Y}
+	score_l = []int{1, 1}
+	pool = Finder(guess_l, score_l, pool)
+
+	guess_l = []byte{Y, G, G, Y}
+	score_l = []int{1, 1}
+	pool = Finder(guess_l, score_l, pool)
+
+	guess_l = []byte{K, G, G, W}
+	score_l = []int{0, 0}
+	pool = Finder(guess_l, score_l, pool)
+
+	guess_l = []byte{U, U, R, R}
+	score_l = []int{1, 1}
+	pool = Finder(guess_l, score_l, pool)
+
+	for i := 0; i < 6*6*6*6; i++ {
+		if pool[i] != 0 {
+			fmt.Println(string(Dehash(i)))
+			if Hash(expected) != i {
+				t.Error("Expected", expected, ", got", string(Dehash(i)))
+			}
+		}
+
+	}
 
 }
