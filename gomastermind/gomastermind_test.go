@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestGomastermind(t *testing.T) {
+func TestHash(t *testing.T) {
 
 	test1 := []byte{'R', 'W', 'Y', 'G'}
 
@@ -19,4 +19,16 @@ func TestGomastermind(t *testing.T) {
 		}
 	}
 
+}
+
+func TestElimColor(t *testing.T) {
+	var colors []byte = []byte{'W', 'Y', 'G', 'U', 'K'}
+
+	var c1 []byte = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+
+	c2 := elimColor('R', c1)
+
+	if !bytes.Equal(c2, colors) {
+		t.Error("Expected", colors, ", got", c2)
+	}
 }
