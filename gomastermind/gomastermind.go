@@ -135,7 +135,7 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 	//var b3 [4][]int = [4][]int{[]int{1}, []int{2}, []int{3}, []int{4}}
 	var index int
 	if score_l[0] == 0 && score_l[1] == 0 {
-		// b=0 w=0
+		// black 0, white 0
 
 		// w=0
 		for i := 0; i < 4; i++ {
@@ -160,21 +160,24 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 		}
 		return newpool
 	} else if score_l[0] == 0 && score_l[1] == 1 {
-		// w=1
+		// black 0, white 1
 		// pick a color from guess_l, then remove the rest of three colors in guess_l from colors
-		for c0pos := 0; c0pos < 4; c0pos++ {
+		combos := [4][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
+
+		for c0pos, elective := range combos {
 			c0 = guess_l[c0pos] // pick a color from guess_l
-
-			combos := [4][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
-
+			colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
 			// remove the rest of three colors from the potential colors
-			colors = elimColor(guess_l[combos[c0pos][0]], colors)
-			colors = elimColor(guess_l[combos[c0pos][1]], colors)
-			colors = elimColor(guess_l[combos[c0pos][2]], colors)
+			colors = elimColor(guess_l[elective[0]], colors)
+			colors = elimColor(guess_l[elective[1]], colors)
+			colors = elimColor(guess_l[elective[2]], colors)
 
 			for _, c1 = range colors { // c1, c2 and c3 are topological
 				for _, c2 = range colors {
 					for _, c3 = range colors {
+
+						// TODO: need to fix this. there is something unclear about this loop
+
 						for _, dst := range combos[c0pos] {
 							if c0 != guess_l[dst] &&
 								c1 != guess_l[combos[dst][0]] &&
@@ -197,7 +200,7 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 		return newpool
 
 	} else if score_l[0] == 0 && score_l[1] == 2 {
-		// w=2
+		// black 0, white 2
 		combos := [...][]int{[]int{0, 1}, []int{1, 0},
 			[]int{0, 2}, []int{2, 0},
 			[]int{0, 3}, []int{3, 0},
@@ -206,7 +209,7 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 			[]int{2, 3}, []int{3, 2}}
 
 		for isrc, src := range combos {
-
+			colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
 			colors = elimColor(guess_l[combos[11-isrc][0]], colors)
 			colors = elimColor(guess_l[combos[11-isrc][1]], colors)
 
@@ -237,7 +240,7 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 		}
 		return newpool
 	} else if score_l[0] == 0 && score_l[1] == 3 {
-		// w=3
+		// black 0, white 3
 
 		combos := [...][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
 		// possible combination to take 3 numbers from 0, 1, 2, 3
@@ -246,7 +249,7 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 
 		for isrc, src := range combos {
 			// src is three indices that are right colors but not in the right position
-
+			colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
 			// remove 1 color from the colors
 			colors = elimColor(guess_l[isrc], colors)
 
@@ -279,7 +282,7 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 		}
 		return newpool
 	} else if score_l[0] == 0 && score_l[1] == 4 {
-		// w=4
+		// black 0, white 4
 		combos := [...][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
 		// possible combination to take 3 numbers from 0, 1, 2, 3
 		permus := [...][]int{[]int{0, 1, 2}, []int{0, 2, 1}, []int{1, 0, 2}, []int{1, 2, 0}, []int{2, 0, 1}, []int{2, 1, 0}}
@@ -303,7 +306,7 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 		return newpool
 
 	} else if score_l[0] == 1 && score_l[1] == 0 {
-		// w=0
+		// black 1, white 0
 		for ib, belects := range b1 {
 			c0 = guess_l[ib]
 			colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
@@ -326,7 +329,7 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 
 		}
 	} else if score_l[0] == 1 && score_l[1] == 1 {
-		// w=1
+		// black 1, white 1
 		combos := [...][]int{[]int{1, 2}, []int{0, 2}, []int{0, 1}}
 		for ib, belects := range b1 {
 			colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
@@ -356,7 +359,7 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 		}
 
 	} else if score_l[0] == 1 && score_l[1] == 2 {
-		// w=2 01, 02, 12
+		// black 1, white 2
 
 		combos := [...][]int{[]int{1, 2}, []int{0, 2}, []int{0, 1}}
 		for ib, belects := range b1 {
@@ -401,7 +404,7 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 
 		return newpool
 	} else if score_l[0] == 2 && score_l[1] == 0 {
-		// w=0
+		// black 2, white 0
 		combos := [...][]int{[]int{0, 1}, []int{0, 2}, []int{0, 3}, []int{1, 2}, []int{1, 3}, []int{2, 3}}
 		permus := [...][]int{[]int{0, 1}, []int{1, 0}}
 
@@ -508,4 +511,5 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 		}
 		return newpool
 	}
+	return newpool
 }
