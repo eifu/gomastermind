@@ -2,6 +2,7 @@ package gomastermind
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 )
 
@@ -36,6 +37,12 @@ func TestElimColor(t *testing.T) {
 func TestPermute(t *testing.T) {
 	a := []byte{'a', 'b', 'c', 'd'}
 	var n int = 4
-	permute(a, 0, n-1)
+	c_chan := make(chan []byte)
+	go permute(c_chan, a, 0, n-1)
+	go func(in <-chan []byte) {
+		for i := range in {
+			fmt.Println(string(i))
 
+		}
+	}(c_chan)
 }

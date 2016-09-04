@@ -126,17 +126,20 @@ func elimColor(c byte, colors []byte) []byte {
 	return colors
 }
 
-func permute(a []byte, l, r int) {
+func Permute(out chan<- []byte, a []byte, l, r int) {
 	var i int
 	if l == r {
-		fmt.Printf("%v\n", string(a))
+		out <- a
+		fmt.Println(string(a))
+
 	} else {
 		for i = l; i <= r; i++ {
 			a[i], a[l] = a[l], a[i]
-			permute(a, l+1, r)
+			Permute(out, a, l+1, r)
 			a[i], a[l] = a[l], a[i]
 		}
 	}
+
 }
 
 func b0w0(guess_l []byte, pool []int) []int {
