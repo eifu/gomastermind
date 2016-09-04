@@ -410,26 +410,27 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 		return newpool
 	} else if score_l[0] == 2 {
 		// b=2
+		if score_l[1] == 0 {
+			// w=0
+			combos := [...][]int{[]int{0, 1}, []int{0, 2}, []int{0, 3}, []int{1, 2}, []int{1, 3}, []int{2, 3}}
+			permus := [...][]int{[]int{0, 1}, []int{1, 0}}
 
-		combos := [...][]int{[]int{0, 1}, []int{0, 2}, []int{0, 3}, []int{1, 2}, []int{1, 3}, []int{2, 3}}
-		permus := [...][]int{[]int{0, 1}, []int{1, 0}}
+			for isrc, src := range combos {
 
-		for isrc, src := range combos {
+				colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+				colors = elimColor(guess_l[combos[5-isrc][0]], colors)
+				colors = elimColor(guess_l[combos[5-isrc][1]], colors)
 
-			colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
-			colors = elimColor(guess_l[combos[5-isrc][0]], colors)
-			colors = elimColor(guess_l[combos[5-isrc][1]], colors)
+				for _, permu := range permus {
 
-			for _, permu := range permus {
+					c0 = guess_l[src[permu[0]]]
+					c1 = guess_l[src[permu[1]]]
 
-				c0 = guess_l[src[permu[0]]]
-				c1 = guess_l[src[permu[1]]]
+					for _, c2 := range colors {
+						for _, c3 := range colors {
 
-				for _, c2 := range colors {
-					for _, c3 := range colors {
-						for _, dst := range combos {
-							if c2 != guess_l[dst[0]] &&
-								c3 != guess_l[dst[1]] {
+							if c2 != guess_l[combos[5-isrc][0]] &&
+								c3 != guess_l[combos[5-isrc][1]] {
 
 								index = pow(6, src[permu[0]]) * ctoi(c0)
 								index += pow(6, src[permu[1]]) * ctoi(c1)
@@ -440,10 +441,58 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 									newpool[index] = 1
 								}
 							}
+
 						}
 					}
 				}
 			}
+		} else if score_l[1] == 1 {
+			combos := [...][]int{[]int{0, 1}, []int{0, 2}, []int{0, 3}, []int{1, 2}, []int{1, 3}, []int{2, 3}}
+
+			for isrc, src := range combos {
+
+				c0 = guess_l[src[0]]
+				c1 = guess_l[src[1]]
+				c2 = guess_l[combos[5-isrc][0]]
+				colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+				colors = elimColor(guess_l[combos[5-isrc][1]], colors)
+
+				for _, c3 := range colors {
+					if c2 != guess_l[combos[5-isrc][1]] &&
+						c3 != guess_l[combos[5-isrc][0]] {
+
+						index = pow(6, src[0]) * ctoi(c0)
+						index += pow(6, src[1]) * ctoi(c1)
+						index += pow(6, combos[5-isrc][1]) * ctoi(c2)
+						index += pow(6, combos[5-isrc][0]) * ctoi(c3)
+
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+					}
+				}
+
+				c2 = guess_l[combos[5-isrc][1]]
+				colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+				colors = elimColor(guess_l[combos[5-isrc][0]], colors)
+
+				for _, c3 := range colors {
+					if c2 != guess_l[combos[5-isrc][0]] &&
+						c3 != guess_l[combos[5-isrc][1]] {
+
+						index = pow(6, src[0]) * ctoi(c0)
+						index += pow(6, src[1]) * ctoi(c1)
+						index += pow(6, combos[5-isrc][0]) * ctoi(c2)
+						index += pow(6, combos[5-isrc][1]) * ctoi(c3)
+
+						if pool[index] != 0 {
+							newpool[index] = 1
+						}
+					}
+
+				}
+			}
+			return newpool
 		}
 	} else if score_l[0] == 3 {
 
