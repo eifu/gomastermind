@@ -95,8 +95,6 @@ func SplitGuess(guess string) []byte {
 	guess = strings.ToUpper(guess)
 	guessSplit := split(guess)
 	for i := 0; i < len(guess); i++ {
-		fmt.Println(a, i, len(guess))
-
 		if guessSplit[i] == 'B' || guessSplit[i] == '\n' {
 			continue
 		}
@@ -495,6 +493,29 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 			return newpool
 		}
 	} else if score_l[0] == 3 {
+		// b=3
+		combos := [...][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
+
+		for isrc, src := range combos {
+			c0 = guess_l[src[0]]
+			c1 = guess_l[src[1]]
+			c2 = guess_l[src[2]]
+
+			colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+			colors = elimColor(guess_l[isrc], colors)
+			for _, c3 := range colors {
+				index = pow(6, src[0]) * ctoi(c0)
+				index += pow(6, src[1]) * ctoi(c1)
+				index += pow(6, src[2]) * ctoi(c2)
+				index += pow(6, isrc) * ctoi(c3)
+				if pool[index] != 0 {
+
+					newpool[index] = 1
+				}
+			}
+
+		}
+		return newpool
 
 	} else {
 
