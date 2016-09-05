@@ -78,6 +78,43 @@ func TestCase1(t *testing.T) {
 	}
 }
 
+func TestJudgeFinderCase1(t *testing.T) {
+	fmt.Println("case1:")
+	//	expected := []byte{R, U, Y, Y}
+	pool := make([]int, 6*6*6*6)
+	for i := 0; i < 6*6*6*6; i++ {
+		pool[i] = 1
+	}
+
+	var guess_l []byte
+	var score_l []int
+
+	guess_l = []byte{U, W, G, Y}
+	score_l = []int{1, 1}
+	pool = JudgeFinder(guess_l, score_l, pool)
+
+	guess_l = []byte{Y, G, G, Y}
+	score_l = []int{1, 1}
+	pool = JudgeFinder(guess_l, score_l, pool)
+
+	guess_l = []byte{K, G, G, W}
+	score_l = []int{0, 0}
+	pool = JudgeFinder(guess_l, score_l, pool)
+
+	guess_l = []byte{U, U, R, R}
+	score_l = []int{1, 1}
+	pool = JudgeFinder(guess_l, score_l, pool)
+
+	for i := 0; i < 6*6*6*6; i++ {
+		if pool[i] != 0 {
+			fmt.Println(string(Dehash(i)))
+			/*if Hash(expected) != i {
+				t.Error("Expected", expected, ", got", string(Dehash(i)))
+			}*/
+		}
+	}
+}
+
 func TestCase2(t *testing.T) {
 	fmt.Println("case2:")
 	expected1 := []byte{G, K, G, Y}
@@ -163,7 +200,7 @@ func TestJudge(t *testing.T) {
 	j = Judge(a, b)
 
 	if j[0] != 2 || j[1] != 2 {
-		t.Error("expected [2, 2] but", j)
+		t.Error(string(a), string(b), "expected [2, 2] but", j)
 	}
 
 	a = []byte{W, W, Y, G}
@@ -171,7 +208,7 @@ func TestJudge(t *testing.T) {
 	j = Judge(a, b)
 
 	if j[0] != 3 || j[1] != 0 {
-		t.Error("expected [3, 0] but", j)
+		t.Error(string(a), string(b), "expected [3, 0] but", j)
 	}
 
 	a = []byte{G, G, G, G}
@@ -179,7 +216,7 @@ func TestJudge(t *testing.T) {
 	j = Judge(a, b)
 
 	if j[0] != 1 || j[1] != 0 {
-		t.Error("expected [1, 0] but", j)
+		t.Error(string(a), string(b), "expected [1, 0] but", j)
 	}
 
 	a = []byte{U, U, U, G}
@@ -187,7 +224,7 @@ func TestJudge(t *testing.T) {
 	j = Judge(a, b)
 
 	if j[0] != 1 || j[1] != 0 {
-		t.Error("expected [1, 0] but", j)
+		t.Error(string(a), string(b), "expected [1, 0] but", j)
 	}
 
 	a = []byte{R, Y, Y, R}
@@ -195,7 +232,31 @@ func TestJudge(t *testing.T) {
 	j = Judge(a, b)
 
 	if j[0] != 1 || j[1] != 1 {
-		t.Error("expected [1, 1] but", j)
+		t.Error(string(a), string(b), "expected [1, 1] but", j)
+	}
+
+	a = []byte{R, U, Y, Y}
+	b = []byte{U, W, G, Y}
+	j = Judge(a, b)
+
+	if j[0] != 1 || j[1] != 1 {
+		t.Error(string(a), string(b), "expected [1, 1] but", j)
+	}
+
+	a = []byte{R, U, Y, Y}
+	b = []byte{Y, G, G, Y}
+	j = Judge(a, b)
+
+	if j[0] != 1 || j[1] != 1 {
+		t.Error(string(a), string(b), "expected [1, 1] but", j)
+	}
+
+	a = []byte{R, U, Y, Y}
+	b = []byte{U, U, R, R}
+	j = Judge(a, b)
+
+	if j[0] != 1 || j[1] != 1 {
+		t.Error(string(a), string(b), "expected [1, 1] but", j)
 	}
 
 	a = []byte{K, K, K, R}
@@ -203,6 +264,6 @@ func TestJudge(t *testing.T) {
 	j = Judge(a, b)
 
 	if j[0] != 0 || j[1] != 1 {
-		t.Error("expected [0, 1] but", j)
+		t.Error(string(a), string(b), "expected [0, 1] but", j)
 	}
 }
