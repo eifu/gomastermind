@@ -141,7 +141,7 @@ func permute(a []byte, l, r int) {
 
 func b0w0(guess_l []byte, pool []int) []int {
 	newpool := make([]int, 6*6*6*6)
-	var colors []byte = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+	var colors []byte = []byte{R, W, Y, G, U, K}
 	var index int
 	for i := 0; i < 4; i++ {
 		// remove all colors in guess
@@ -169,37 +169,42 @@ func b0w0(guess_l []byte, pool []int) []int {
 
 func b0w1(guess_l []byte, pool []int) []int {
 	newpool := make([]int, 6*6*6*6)
-	var colors []byte = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+	var colors []byte
 	var c0, c1, c2, c3 byte
 	var index int
 	combos := [4][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
+	permus := [...][]int{[]int{0, 1, 2}, []int{0, 2, 1}, []int{1, 0, 2}, []int{1, 2, 0}, []int{2, 0, 1}, []int{2, 1, 0}}
 	// pick a color from guess_l, then remove the rest of three colors in guess_l from colors
 	for c0pos, elective := range combos {
-		c0 = guess_l[c0pos] // pick a color from guess_l
-		colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+		// pick a color from guess_l
+		c0 = guess_l[c0pos]
+
 		// remove the rest of three colors from the potential colors
+		colors = []byte{R, W, Y, G, U, K}
 		colors = elimColor(guess_l[elective[0]], colors)
 		colors = elimColor(guess_l[elective[1]], colors)
 		colors = elimColor(guess_l[elective[2]], colors)
 
-		for _, c1 = range colors { // c1, c2 and c3 are topological
+		// c1, c2 and c3 are topological
+		for _, c1 = range colors {
 			for _, c2 = range colors {
 				for _, c3 = range colors {
 
 					// TODO: need to fix this. there is something unclear about this loop
-
 					for _, dst := range combos[c0pos] {
-						if c0 != guess_l[dst] &&
-							c1 != guess_l[combos[dst][0]] &&
-							c2 != guess_l[combos[dst][1]] &&
-							c3 != guess_l[combos[dst][2]] {
+						for _, permu := range permus {
+							if c0 != guess_l[dst] &&
+								c1 != guess_l[combos[dst][permu[0]]] &&
+								c2 != guess_l[combos[dst][permu[1]]] &&
+								c3 != guess_l[combos[dst][permu[2]]] {
 
-							index = pow(6, dst) * ctoi(c0)
-							index += pow(6, combos[dst][0]) * ctoi(c1)
-							index += pow(6, combos[dst][1]) * ctoi(c2)
-							index += pow(6, combos[dst][2]) * ctoi(c3)
-							if pool[index] != 0 {
-								newpool[index] = 1
+								index = pow(6, dst) * ctoi(c0)
+								index += pow(6, combos[dst][permu[0]]) * ctoi(c1)
+								index += pow(6, combos[dst][permu[1]]) * ctoi(c2)
+								index += pow(6, combos[dst][permu[2]]) * ctoi(c3)
+								if pool[index] != 0 {
+									newpool[index] = 1
+								}
 							}
 						}
 					}
@@ -212,7 +217,7 @@ func b0w1(guess_l []byte, pool []int) []int {
 
 func b0w2(guess_l []byte, pool []int) []int {
 	newpool := make([]int, 6*6*6*6)
-	var colors []byte = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+	var colors []byte
 	var c0, c1, c2, c3 byte
 	var index int
 	combos := [...][]int{[]int{0, 1}, []int{0, 2}, []int{0, 3}, []int{1, 2}, []int{1, 3}, []int{2, 3}}
@@ -225,7 +230,7 @@ func b0w2(guess_l []byte, pool []int) []int {
 		c1 = guess_l[src[1]]
 
 		// remove the rest of two colors
-		colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+		colors = []byte{R, W, Y, G, U, K}
 		colors = elimColor(guess_l[combos[5-isrc][0]], colors)
 		colors = elimColor(guess_l[combos[5-isrc][1]], colors)
 
@@ -234,17 +239,23 @@ func b0w2(guess_l []byte, pool []int) []int {
 			for _, c3 = range colors {
 				// TODO: make function that gives permutation of 4 numbers
 
-				for _, permu := range permus {
-					if c0 != guess_l[combos[5-isrc][permu[0]]] &&
-						c1 != guess_l[combos[5-isrc][permu[1]]] &&
-						c2 != guess_l[src[0]] &&
-						c3 != guess_l[src[1]] {
-						index = pow(6, combos[5-isrc][permu[0]]) * ctoi(c0)
-						index += pow(6, combos[5-isrc][permu[1]]) * ctoi(c1)
-						index += pow(6, src[0]) * ctoi(c2)
-						index += pow(6, src[1]) * ctoi(c3)
-						if pool[index] != 0 {
-							newpool[index] = 1
+				for idst1, dst1 := range combos {
+					for _, permu1 := range permus {
+						for _, permu2 := range permus {
+							if c0 != guess_l[dst1[permu1[0]]] &&
+								c1 != guess_l[dst1[permu1[1]]] &&
+								c2 != guess_l[combos[5-idst1][permu2[0]]] &&
+								c3 != guess_l[combos[5-idst1][permu2[1]]] {
+
+								index = pow(6, dst1[permu1[0]]) * ctoi(c0)
+								index += pow(6, dst1[permu1[1]]) * ctoi(c1)
+								index += pow(6, combos[5-idst1][permu2[0]]) * ctoi(c2)
+								index += pow(6, combos[5-idst1][permu2[1]]) * ctoi(c3)
+								if pool[index] != 0 {
+									newpool[index] = 1
+								}
+
+							}
 						}
 					}
 				}
@@ -266,7 +277,7 @@ func b0w3(guess_l []byte, pool []int) []int {
 
 	for isrc, src := range combos {
 		// src is three indices that are right colors but not in the right position
-		colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+		colors = []byte{R, W, Y, G, U, K}
 		// remove 1 color from the colors
 		colors = elimColor(guess_l[isrc], colors)
 
@@ -334,7 +345,7 @@ func b1w0(guess_l []byte, pool []int) []int {
 	var index int
 	for ib, belects := range b1 {
 		c0 = guess_l[ib]
-		colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+		colors = []byte{R, W, Y, G, U, K}
 		for _, belect := range belects {
 			colors = elimColor(guess_l[belect], colors)
 		}
@@ -367,7 +378,7 @@ func b1w1(guess_l []byte, pool []int) []int {
 		for isrc, src := range combos {
 			c0 = guess_l[ib]            // c0 is the right color in the right position
 			c1 = guess_l[belects[isrc]] // c1 is the fixed color, not in the position
-			colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+			colors = []byte{R, W, Y, G, U, K}
 			colors = elimColor(guess_l[belects[src[0]]], colors)
 			colors = elimColor(guess_l[belects[src[1]]], colors)
 			for _, c2 = range colors { // c2 and c3 are topologic
@@ -409,7 +420,7 @@ func b1w2(guess_l []byte, pool []int) []int {
 			c2 = guess_l[belects[src[1]]]
 
 			// remove 1 color out of rest of 3 colors.
-			colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+			colors = []byte{R, W, Y, G, U, K}
 			colors = elimColor(guess_l[belects[isrc]], colors)
 
 			for _, c3 = range colors {
@@ -456,7 +467,7 @@ func b2w0(guess_l []byte, pool []int) []int {
 
 	for isrc, src := range combos {
 
-		colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+		colors = []byte{R, W, Y, G, U, K}
 		colors = elimColor(guess_l[combos[5-isrc][0]], colors)
 		colors = elimColor(guess_l[combos[5-isrc][1]], colors)
 
@@ -499,7 +510,7 @@ func b2w1(guess_l []byte, pool []int) []int {
 		c0 = guess_l[src[0]]
 		c1 = guess_l[src[1]]
 		c2 = guess_l[combos[5-isrc][0]]
-		colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+		colors = []byte{R, W, Y, G, U, K}
 		colors = elimColor(guess_l[combos[5-isrc][1]], colors)
 
 		for _, c3 = range colors {
@@ -518,7 +529,7 @@ func b2w1(guess_l []byte, pool []int) []int {
 		}
 
 		c2 = guess_l[combos[5-isrc][1]]
-		colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+		colors = []byte{R, W, Y, G, U, K}
 		colors = elimColor(guess_l[combos[5-isrc][0]], colors)
 
 		for _, c3 = range colors {
@@ -551,7 +562,7 @@ func b3w0(guess_l []byte, pool []int) []int {
 		c1 = guess_l[src[1]]
 		c2 = guess_l[src[2]]
 
-		colors = []byte{'R', 'W', 'Y', 'G', 'U', 'K'}
+		colors = []byte{R, W, Y, G, U, K}
 		colors = elimColor(guess_l[isrc], colors)
 		for _, c3 = range colors {
 			index = pow(6, src[0]) * ctoi(c0)
