@@ -153,3 +153,56 @@ func TestCase3(t *testing.T) {
 		}
 	}
 }
+
+func TestJudge(t *testing.T) {
+	var a, b []byte
+	var j []int
+
+	a = []byte{R, W, Y, G}
+	b = []byte{W, R, Y, G}
+	j = Judge(a, b)
+
+	if j[0] != 2 || j[1] != 2 {
+		t.Error("expected [2, 2] but", j)
+	}
+
+	a = []byte{W, W, Y, G}
+	b = []byte{W, R, Y, G}
+	j = Judge(a, b)
+
+	if j[0] != 3 || j[1] != 0 {
+		t.Error("expected [3, 0] but", j)
+	}
+
+	a = []byte{G, G, G, G}
+	b = []byte{W, R, Y, G}
+	j = Judge(a, b)
+
+	if j[0] != 1 || j[1] != 0 {
+		t.Error("expected [1, 0] but", j)
+	}
+
+	a = []byte{U, U, U, G}
+	b = []byte{W, R, Y, G}
+	j = Judge(a, b)
+
+	if j[0] != 1 || j[1] != 0 {
+		t.Error("expected [1, 0] but", j)
+	}
+
+	a = []byte{R, Y, Y, R}
+	b = []byte{W, R, Y, G}
+	j = Judge(a, b)
+
+	if j[0] != 1 || j[1] != 1 {
+		t.Error("expected [1, 1] but", j)
+	}
+
+	a = []byte{K, K, K, R}
+	b = []byte{W, R, Y, G}
+	j = Judge(a, b)
+
+	if j[0] != 0 || j[1] != 1 {
+		t.Error("expected [0, 1] but", j)
+	}
+}

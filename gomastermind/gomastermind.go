@@ -615,3 +615,30 @@ func Finder(guess_l []byte, score_l, pool []int) []int {
 	}
 	return pool
 }
+
+func Judge(a, b []byte) []int {
+	score := make([]int, 2)
+	mark := make([]int, 4)
+
+	combos := [...][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
+
+	for ia, elema := range a {
+		if b[ia] == elema {
+			score[0] += 1
+			mark[ia] = 1
+		}
+
+	}
+
+	for ia, elema := range a {
+
+		for _, ib := range combos[ia] {
+			if elema == b[ib] && mark[ib] == 0 {
+				score[1] += 1
+				mark[ib] = 1
+			}
+		}
+	}
+	return score
+
+}
