@@ -1,6 +1,9 @@
 package gomastermind
 
 import (
+	"errors"
+	"fmt"
+	"os"
 	"reflect"
 	"strings"
 )
@@ -107,7 +110,24 @@ func SplitGuess(guess string) []byte {
 	return a
 }
 
-func Judge(a, b []byte, snum int) []int {
+type error interface {
+	Error() string
+}
+
+type errorString struct {
+	s string
+}
+
+func (e *errorString) Error() string {
+	return e.s
+}
+
+func Judge(a, b []byte) ([]int, error) {
+	snum := len(a)
+	if len(a) != len(b) {
+		return nil, errors.New("gomastermind: a and b must be the same length")
+	}
+
 	score := make([]int, 2)
 	amark := make([]int, snum)
 	bmark := make([]int, snum)
@@ -132,14 +152,20 @@ func Judge(a, b []byte, snum int) []int {
 			}
 		}
 	}
-	return score
+	return score, nil
 }
 
 func JudgeFinder(guess_l []byte, score_l, pool []int, sN, cN int) []int {
-	var score []int
+
 	for i := 0; i < cN*cN*cN*cN; i++ {
 		if pool[i] != 0 {
-			score = Judge(guess_l, Dehash(i), sN)
+			score, err := Judge(guess_l, Dehash(i))
+
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "JudgeFinder:", err)
+				os.Exit(1)
+			}
+
 			if !reflect.DeepEqual(score, score_l) {
 				pool[i] = 0
 			}

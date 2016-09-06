@@ -2,6 +2,7 @@ package gomastermind
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 )
 
@@ -139,7 +140,7 @@ func TestJudge(t *testing.T) {
 
 	a = []byte{R, W, Y, G}
 	b = []byte{W, R, Y, G}
-	j = Judge(a, b, 4)
+	j, _ = Judge(a, b)
 
 	if j[0] != 2 || j[1] != 2 {
 		t.Error(string(a), string(b), "expected [2, 2] but", j)
@@ -147,7 +148,7 @@ func TestJudge(t *testing.T) {
 
 	a = []byte{W, W, Y, G}
 	b = []byte{W, R, Y, G}
-	j = Judge(a, b, 4)
+	j, _ = Judge(a, b)
 
 	if j[0] != 3 || j[1] != 0 {
 		t.Error(string(a), string(b), "expected [3, 0] but", j)
@@ -155,7 +156,7 @@ func TestJudge(t *testing.T) {
 
 	a = []byte{G, G, G, G}
 	b = []byte{W, R, Y, G}
-	j = Judge(a, b, 4)
+	j, _ = Judge(a, b)
 
 	if j[0] != 1 || j[1] != 0 {
 		t.Error(string(a), string(b), "expected [1, 0] but", j)
@@ -163,7 +164,7 @@ func TestJudge(t *testing.T) {
 
 	a = []byte{U, U, U, G}
 	b = []byte{W, R, Y, G}
-	j = Judge(a, b, 4)
+	j, _ = Judge(a, b)
 
 	if j[0] != 1 || j[1] != 0 {
 		t.Error(string(a), string(b), "expected [1, 0] but", j)
@@ -171,7 +172,7 @@ func TestJudge(t *testing.T) {
 
 	a = []byte{R, Y, Y, R}
 	b = []byte{W, R, Y, G}
-	j = Judge(a, b, 4)
+	j, _ = Judge(a, b)
 
 	if j[0] != 1 || j[1] != 1 {
 		t.Error(string(a), string(b), "expected [1, 1] but", j)
@@ -179,7 +180,7 @@ func TestJudge(t *testing.T) {
 
 	a = []byte{R, U, Y, Y}
 	b = []byte{U, W, G, Y}
-	j = Judge(a, b, 4)
+	j, _ = Judge(a, b)
 
 	if j[0] != 1 || j[1] != 1 {
 		t.Error(string(a), string(b), "expected [1, 1] but", j)
@@ -187,7 +188,7 @@ func TestJudge(t *testing.T) {
 
 	a = []byte{R, U, Y, Y}
 	b = []byte{Y, G, G, Y}
-	j = Judge(a, b, 4)
+	j, _ = Judge(a, b)
 
 	if j[0] != 1 || j[1] != 1 {
 		t.Error(string(a), string(b), "expected [1, 1] but", j)
@@ -195,7 +196,7 @@ func TestJudge(t *testing.T) {
 
 	a = []byte{R, U, Y, Y}
 	b = []byte{U, U, R, R}
-	j = Judge(a, b, 4)
+	j, _ = Judge(a, b)
 
 	if j[0] != 1 || j[1] != 1 {
 		t.Error(string(a), string(b), "expected [1, 1] but", j)
@@ -203,9 +204,36 @@ func TestJudge(t *testing.T) {
 
 	a = []byte{K, K, K, R}
 	b = []byte{W, R, Y, G}
-	j = Judge(a, b, 4)
+	j, _ = Judge(a, b)
 
 	if j[0] != 0 || j[1] != 1 {
 		t.Error(string(a), string(b), "expected [0, 1] but", j)
 	}
+	a = []byte{K, K, K, R, G}
+	b = []byte{W, R, Y, G, G}
+	j, _ = Judge(a, b)
+
+	if j[0] != 1 || j[1] != 1 {
+		t.Error(string(a), string(b), "expected [1, 1] but", j)
+	}
+	a = []byte{K, K, K, R, Y}
+	b = []byte{W, R, Y, G, K}
+	j, _ = Judge(a, b)
+
+	if j[0] != 0 || j[1] != 3 {
+		t.Error(string(a), string(b), "expected [0, 3] but", j)
+	}
+
+}
+
+func TestJudgeError(t *testing.T) {
+
+	a := []byte{K, K, K, R}
+	b := []byte{W, R, Y, G, K}
+	_, err := Judge(a, b)
+
+	if err == nil {
+		t.Error(string(a), string(b), "expected error occurs but", err)
+	}
+
 }
