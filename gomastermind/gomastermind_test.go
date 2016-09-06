@@ -2,7 +2,6 @@ package gomastermind
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 )
 

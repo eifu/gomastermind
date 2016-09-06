@@ -123,14 +123,14 @@ func (e *errorString) Error() string {
 }
 
 func Judge(a, b []byte) ([]int, error) {
-	snum := len(a)
+
 	if len(a) != len(b) {
 		return nil, errors.New("gomastermind: a and b must be the same length")
 	}
 
 	score := make([]int, 2)
-	amark := make([]int, snum)
-	bmark := make([]int, snum)
+	amark := make([]int, len(a))
+	bmark := make([]int, len(b))
 
 	for ia, elema := range a {
 		if b[ia] == elema {
@@ -142,7 +142,7 @@ func Judge(a, b []byte) ([]int, error) {
 
 	for ia, elema := range a {
 		if amark[ia] == 0 {
-			for ib := 0; ib < snum; ib++ {
+			for ib := 0; ib < len(b); ib++ {
 				if ib != ia && elema == b[ib] && bmark[ib] == 0 {
 					score[1] += 1
 					amark[ia] = 1
@@ -157,7 +157,7 @@ func Judge(a, b []byte) ([]int, error) {
 
 func JudgeFinder(guess_l []byte, score_l, pool []int, sN, cN int) []int {
 
-	for i := 0; i < cN*cN*cN*cN; i++ {
+	for i := 0; i < pow(cN, sN); i++ {
 		if pool[i] != 0 {
 			score, err := Judge(guess_l, Dehash(i))
 
