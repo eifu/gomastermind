@@ -1,7 +1,6 @@
 package gomastermind
 
 import (
-	"fmt"
 	"reflect"
 	"strings"
 )
@@ -81,7 +80,7 @@ func Dehash(num int) []byte {
 	return code
 }
 
-func split(s string) []byte {
+func Split(s string) []byte {
 	a := make([]byte, len(s))
 	for i := 0; i < len(s); i++ {
 		a[i] = s[i]
@@ -104,10 +103,9 @@ func SplitScore(score string) []int {
 
 func SplitGuess(guess string) []byte {
 	a := make([]byte, 0, len(guess))
-	fmt.Println(split(guess))
 
 	guess = strings.ToUpper(guess)
-	guessSplit := split(guess)
+	guessSplit := Split(guess)
 	for i := 0; i < len(guess); i++ {
 		if guessSplit[i] == 'B' || guessSplit[i] == '\n' {
 			continue
@@ -117,11 +115,11 @@ func SplitGuess(guess string) []byte {
 	return a
 }
 
-func Judge(a, b []byte) []int {
+func Judge(a, b []byte, snum int) []int {
 	score := make([]int, 2)
-	amark := make([]int, 4)
-	bmark := make([]int, 4)
-	combos := [...][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
+	amark := make([]int, snum)
+	bmark := make([]int, snum)
+	//	combos := [...][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
 
 	for ia, elema := range a {
 		if b[ia] == elema {
@@ -133,8 +131,8 @@ func Judge(a, b []byte) []int {
 
 	for ia, elema := range a {
 		if amark[ia] == 0 {
-			for _, ib := range combos[ia] {
-				if elema == b[ib] && bmark[ib] == 0 {
+			for ib := 0; ib < snum; ib++ {
+				if ib != ia && elema == b[ib] && bmark[ib] == 0 {
 					score[1] += 1
 					amark[ia] = 1
 					bmark[ib] = 1
@@ -144,14 +142,13 @@ func Judge(a, b []byte) []int {
 		}
 	}
 	return score
-
 }
 
-func JudgeFinder(guess_l []byte, score_l, pool []int) []int {
+func JudgeFinder(guess_l []byte, score_l, pool []int, sN, cN int) []int {
 	var score []int
-	for i := 0; i < 6*6*6*6; i++ {
+	for i := 0; i < cN*cN*cN*cN; i++ {
 		if pool[i] != 0 {
-			score = Judge(guess_l, Dehash(i))
+			score = Judge(guess_l, Dehash(i), sN)
 			if !reflect.DeepEqual(score, score_l) {
 				pool[i] = 0
 			}
