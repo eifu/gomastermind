@@ -2,6 +2,7 @@ package gomastermind
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 )
 
@@ -151,7 +152,7 @@ func JudgeFinder(guess_l []byte, score_l, pool []int) []int {
 	for i := 0; i < 6*6*6*6; i++ {
 		if pool[i] != 0 {
 			score = Judge(guess_l, Dehash(i))
-			if score[0] != score_l[0] || score[1] != score_l[1] {
+			if !reflect.DeepEqual(score, score_l) {
 				pool[i] = 0
 			}
 		}
