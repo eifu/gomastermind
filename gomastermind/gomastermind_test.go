@@ -2,7 +2,6 @@ package gomastermind
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 )
 
@@ -23,8 +22,8 @@ func TestHash(t *testing.T) {
 }
 
 func TestJudgeFinderCase1(t *testing.T) {
-	fmt.Println("case1:")
-	//	expected := []byte{R, U, Y, Y}
+
+	expected := []byte{R, U, Y, Y}
 	pool := make([]int, 6*6*6*6)
 	for i := 0; i < 6*6*6*6; i++ {
 		pool[i] = 1
@@ -51,16 +50,15 @@ func TestJudgeFinderCase1(t *testing.T) {
 
 	for i := 0; i < 6*6*6*6; i++ {
 		if pool[i] != 0 {
-			fmt.Println(string(Dehash(i)))
-			/*if Hash(expected) != i {
+			if Hash(expected) != i {
 				t.Error("Expected", expected, ", got", string(Dehash(i)))
-			}*/
+			}
 		}
 	}
 }
 
 func TestJudgeFinderCase2(t *testing.T) {
-	fmt.Println("case2:")
+
 	expected1 := []byte{G, K, G, Y}
 	expected2 := []byte{G, W, G, U}
 	pool := make([]int, 6*6*6*6)
@@ -93,7 +91,6 @@ func TestJudgeFinderCase2(t *testing.T) {
 
 	for i := 0; i < 6*6*6*6; i++ {
 		if pool[i] != 0 {
-			fmt.Println(string(Dehash(i)))
 			if Hash(expected1) != i && Hash(expected2) != i {
 				t.Error("Expected", expected1, "or", expected2, ", got", string(Dehash(i)))
 			}
@@ -102,7 +99,7 @@ func TestJudgeFinderCase2(t *testing.T) {
 }
 
 func TestJudgeFinderCase3(t *testing.T) {
-	fmt.Println("case3:")
+	expected := []byte{Y, G, R, G}
 	pool := make([]int, 6*6*6*6)
 	for i := 0; i < 6*6*6*6; i++ {
 		pool[i] = 1
@@ -129,8 +126,9 @@ func TestJudgeFinderCase3(t *testing.T) {
 
 	for i := 0; i < 6*6*6*6; i++ {
 		if pool[i] != 0 {
-			fmt.Println(string(Dehash(i)))
-
+			if Hash(expected) != i {
+				t.Error("Expected", expected, ", got", string(Dehash(i)))
+			}
 		}
 	}
 }
