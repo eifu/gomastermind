@@ -39,7 +39,7 @@ func main() {
 
 		score_l = gomastermind.SplitScore(score)
 
-		pool = gomastermind.Finder(guess_l, score_l, pool)
+		pool = gomastermind.JudgeFinder(guess_l, score_l, pool)
 
 		count := 0
 		for index, e := range pool {
