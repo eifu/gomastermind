@@ -157,6 +157,48 @@ func TestCase2(t *testing.T) {
 	}
 }
 
+func TestJudgeFinderCase2(t *testing.T) {
+	fmt.Println("case2:")
+	expected1 := []byte{G, K, G, Y}
+	expected2 := []byte{G, W, G, U}
+	pool := make([]int, 6*6*6*6)
+	for i := 0; i < 6*6*6*6; i++ {
+		pool[i] = 1
+	}
+
+	var guess_l []byte
+	var score_l []int
+
+	guess_l = []byte{R, G, Y, W}
+	score_l = []int{0, 2}
+	pool = JudgeFinder(guess_l, score_l, pool)
+
+	guess_l = []byte{Y, K, W, U}
+	score_l = []int{1, 1}
+	pool = JudgeFinder(guess_l, score_l, pool)
+
+	guess_l = []byte{G, R, R, G}
+	score_l = []int{1, 1}
+	pool = JudgeFinder(guess_l, score_l, pool)
+
+	guess_l = []byte{K, U, G, R}
+	score_l = []int{1, 1}
+	pool = JudgeFinder(guess_l, score_l, pool)
+
+	guess_l = []byte{W, R, K, R}
+	score_l = []int{0, 1}
+	pool = JudgeFinder(guess_l, score_l, pool)
+
+	for i := 0; i < 6*6*6*6; i++ {
+		if pool[i] != 0 {
+			fmt.Println(string(Dehash(i)))
+			if Hash(expected1) != i && Hash(expected2) != i {
+				t.Error("Expected", expected1, "or", expected2, ", got", string(Dehash(i)))
+			}
+		}
+	}
+}
+
 func TestCase3(t *testing.T) {
 	fmt.Println("case3:")
 	pool := make([]int, 6*6*6*6)
@@ -182,6 +224,40 @@ func TestCase3(t *testing.T) {
 	guess_l = []byte{Y, R, R, W}
 	score_l = []int{2, 0}
 	pool = Finder(guess_l, score_l, pool)
+
+	for i := 0; i < 6*6*6*6; i++ {
+		if pool[i] != 0 {
+			fmt.Println(string(Dehash(i)))
+
+		}
+	}
+}
+
+func TestJudgeFinderCase3(t *testing.T) {
+	fmt.Println("case3:")
+	pool := make([]int, 6*6*6*6)
+	for i := 0; i < 6*6*6*6; i++ {
+		pool[i] = 1
+	}
+
+	var guess_l []byte
+	var score_l []int
+
+	guess_l = []byte{W, G, U, R}
+	score_l = []int{1, 1}
+	pool = JudgeFinder(guess_l, score_l, pool)
+
+	guess_l = []byte{K, Y, R, U}
+	score_l = []int{1, 1}
+	pool = JudgeFinder(guess_l, score_l, pool)
+
+	guess_l = []byte{R, R, G, Y}
+	score_l = []int{0, 3}
+	pool = JudgeFinder(guess_l, score_l, pool)
+
+	guess_l = []byte{Y, R, R, W}
+	score_l = []int{2, 0}
+	pool = JudgeFinder(guess_l, score_l, pool)
 
 	for i := 0; i < 6*6*6*6; i++ {
 		if pool[i] != 0 {
