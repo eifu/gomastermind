@@ -80,14 +80,6 @@ func Dehash(num int) []byte {
 	return code
 }
 
-func Split(s string) []byte {
-	a := make([]byte, len(s))
-	for i := 0; i < len(s); i++ {
-		a[i] = s[i]
-	}
-	return a
-}
-
 func SplitScore(score string) []int {
 	a := make([]int, 2)
 	for i := 0; i < len(score); i++ {
@@ -105,12 +97,12 @@ func SplitGuess(guess string) []byte {
 	a := make([]byte, 0, len(guess))
 
 	guess = strings.ToUpper(guess)
-	guessSplit := Split(guess)
+
 	for i := 0; i < len(guess); i++ {
-		if guessSplit[i] == 'B' || guessSplit[i] == '\n' {
+		if guess[i] == 'B' || guess[i] == '\n' {
 			continue
 		}
-		a = append(a, byte(guessSplit[i]))
+		a = append(a, byte(guess[i]))
 	}
 	return a
 }
@@ -119,7 +111,6 @@ func Judge(a, b []byte, snum int) []int {
 	score := make([]int, 2)
 	amark := make([]int, snum)
 	bmark := make([]int, snum)
-	//	combos := [...][]int{[]int{1, 2, 3}, []int{0, 2, 3}, []int{0, 1, 3}, []int{0, 1, 2}}
 
 	for ia, elema := range a {
 		if b[ia] == elema {
