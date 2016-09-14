@@ -73,7 +73,7 @@ func main() {
 		for index, e := range pool {
 			if e != 0 {
 				count += 1
-				fmt.Println(index, string(gomastermind.Dehash(index)))
+				fmt.Println(gomastermind.ToString(index))
 			}
 		}
 

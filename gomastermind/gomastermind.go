@@ -1,6 +1,7 @@
 package gomastermind
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"os"
@@ -35,7 +36,7 @@ func ctoi(c byte) int {
 	return 0
 }
 
-func itoc(i int) byte {
+func itob(i int) byte {
 	switch i {
 	case 0:
 		return R
@@ -51,6 +52,24 @@ func itoc(i int) byte {
 		return K
 	}
 	return 0
+}
+
+func itoc(i int) string {
+	switch i {
+	case 0:
+		return "R"
+	case 1:
+		return "W"
+	case 2:
+		return "Y"
+	case 3:
+		return "G"
+	case 4:
+		return "Bu"
+	case 5:
+		return "Bk"
+	}
+	return ""
 }
 
 func pow(a, b int) int {
@@ -77,10 +96,18 @@ func Hash(guess []byte) int {
 func Dehash(num int) []byte {
 	code := make([]byte, 4)
 	for i := 3; i >= 0; i-- {
-		code[i] = itoc(num / pow(6, i))
+		code[i] = itob(num / pow(6, i))
 		num = num - pow(6, i)*(num/pow(6, i))
 	}
 	return code
+}
+func ToString(num int) string {
+	var buffer bytes.Buffer
+	for i := 3; i >= 0; i-- {
+		buffer.WriteString(itoc(num / pow(6, i)))
+		num = num - pow(6, i)*(num/pow(6, i))
+	}
+	return buffer.String()
 }
 
 func SplitScore(score string) []int {
